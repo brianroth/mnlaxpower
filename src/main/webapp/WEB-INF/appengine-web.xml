@@ -1,6 +1,6 @@
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
 
-    <application>ninja-simple</application>
+    <application>mnlaxpower</application>
     <version>1</version>
 
     <static-files>

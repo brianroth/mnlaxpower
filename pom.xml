@@ -118,7 +118,7 @@
 				<artifactId>appengine-maven-plugin</artifactId>
 				<version>${appengine.version}</version>
 				<configuration>
-					<appId>ninja-simple</appId>
+					<appId>mnlaxpower</appId>
 					<version>1</version>
 					<jvmFlags>
 						<!-- see also: http://blog.cwill-dev.com/2011/11/22/grails-java-lang-outofmemoryerror-permgen-space/ -->
