@@ -19,10 +19,10 @@ public class TeamDao {
     private Provider<Objectify> objectify;
 
     public List<Team> findAllByDivision(long divisionId) {
-        List<Team> teams =objectify.get().load().type(Team.class).filter("divisionId", divisionId).list();
+        List<Team> teams = objectify.get().load().type(Team.class).filter("divisionId", divisionId).list();
 
         Collections.sort(teams);
-        
+
         return teams;
     }
 
@@ -38,10 +38,14 @@ public class TeamDao {
 
         return team;
     }
-    
+
+    public Team findById(long id) {
+        return objectify.get().load().type(Team.class).filter("id", id).first().now();
+    }
+
     public Team save(Team team) {
         objectify.get().save().entity(team);
-        
+
         return team;
     }
 }

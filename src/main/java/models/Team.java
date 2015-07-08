@@ -27,6 +27,12 @@ public class Team implements Comparable<Team> {
 
     private double wp;
 
+    private double owp;
+
+    private double oowp;
+    
+    private double rpi;
+    
     private long divisionId;
 
     // Required for JSON deserialization
@@ -106,13 +112,37 @@ public class Team implements Comparable<Team> {
 
     @Override
     public int compareTo(Team otherTeam) {
-        if (otherTeam.getWp() > this.getWp()) {
+        if (otherTeam.getRpi() > this.getRpi()) {
             return 1;
-        } else if (otherTeam.getWp() < this.getWp()) {
+        } else if (otherTeam.getRpi() < this.getRpi()) {
             return -1;
         } else {
             return 0;
         }
 
+    }
+
+    public double getOwp() {
+        return owp;
+    }
+
+    public void setOwp(double owp) {
+        this.owp = (double)(Math.round(owp * 100)) / 100.0;
+    }
+
+    public double getRpi() {
+        return rpi;
+    }
+
+    public void setRpi(double rpi) {
+        this.rpi = (double)(Math.round(rpi * 100)) / 100.0;
+    }
+
+    public double getOowp() {
+        return oowp;
+    }
+
+    public void setOowp(double oowp) {
+        this.oowp = oowp;
     }
 }

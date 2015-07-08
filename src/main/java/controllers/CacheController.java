@@ -2,6 +2,8 @@ package controllers;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -11,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import models.Division;
+import models.Game;
 import models.Metrics;
 import models.Season;
 import models.Team;
@@ -67,6 +70,12 @@ public class CacheController {
         try {
 
             Metrics metrics = metricsDao.find();
+
+            Season season = seasonDao.findById(12179);
+
+            for (Division division : season.getDivisions()) {
+                recalculate(division);
+            }
 
             metrics.setLastRecalculate(new Date());
 
@@ -239,6 +248,74 @@ public class CacheController {
         return season;
     }
 
+    private void recalculate(Division division) {
+        
+        logger.info("Recalculating division {}", division.getName());
+        
+        division.setTeams(teamDao.findAllByDivision(division.getId()));
+        
+        // Calculate OWP
+        for (Team team : division.getTeams()) {
+            Set<Team> opponents = findAllOpponents(team.getId());
+            
+            // TODO: Throw out games against this team when calculating OWP
+            // This means that owp won't be persistable again because it's
+            // definition varies from the perspective of the current team. 
+            
+            int gamesPlayed = 0;
+            int wins = 0;
+            
+            for (Team opponent : opponents) {
+                gamesPlayed += opponent.getGamesPlayed();
+                wins += opponent.getWins();
+            }
+            
+            team.setOwp((1.0 * wins) / gamesPlayed);
+        }
+        
+        // TODO: Calculate OOWP
+        for (Team team : division.getTeams()) {
+            Set<Team> opponents = findAllOpponents(team.getId());
+            
+            int gamesPlayed = 0;
+            int wins = 0;
+            
+            for (Team oppenent : opponents) {
+                Set<Team> opponentOpponents = findAllOpponents(oppenent.getId());
+                
+                for (Team opponentOpponent : opponentOpponents) {
+                    gamesPlayed += opponentOpponent.getGamesPlayed();
+                    wins += opponentOpponent.getWins();
+                }
+            }
+            
+            team.setOowp((1.0 * wins) / gamesPlayed);
+        }
+        
+        // Calculate RPI and save team
+        for (Team team : division.getTeams()) {
+            team.setRpi(0.25 * team.getWp() + 0.5 * team.getOwp() + 0.25 * team.getOowp());
+            
+            teamDao.save(team);
+        }
+
+    }
+
+    private Set<Team> findAllOpponents(long teamId) {
+        Set<Team> opponents = new HashSet<Team>();
+        
+        for (Game game : gameDao.findByHomeTeamId(teamId)) {
+            opponents.add(teamDao.findById(game.getAwayTeamId()));
+        }
+
+        for (Game game : gameDao.findByAwayTeamId(teamId)) {
+            opponents.add(teamDao.findById(game.getHomeTeamId()));
+        }
+        
+        return opponents;
+    }
+    
+        
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ApiResult {
         @JsonProperty("results")
