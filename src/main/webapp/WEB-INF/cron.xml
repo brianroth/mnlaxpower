@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/recache</url>
+    <description>Repopulate the cache every 4 hours</description>
+    <schedule>every 4 hours</schedule>
+  </cron>
+  <cron>
+    <url>/recalculate</url>
+    <description>Recalculate the RPI every 2 hours</description>
+    <schedule>every 2 hours</schedule>
+  </cron>
+</cronentries>

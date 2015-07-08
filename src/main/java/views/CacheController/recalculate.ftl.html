@@ -1,0 +1,8 @@
+<#import "../layout/defaultLayout.ftl.html" as layout> 
+<@layout.myLayout "Done reticulating splines"> 
+<#if error??>
+<p>Recalculate failed due to ${error} in ${time}ms.</p>
+<#else>
+<p>${i18n("recalculate.success")} in ${time}ms.</p>
+</#if>
+</@layout.myLayout>
