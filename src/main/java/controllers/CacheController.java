@@ -18,7 +18,9 @@ import ninja.FilterWith;
 import ninja.Result;
 import ninja.Results;
 import ninja.appengine.AppEngineFilter;
+import ninja.params.PathParam;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,16 +82,29 @@ public class CacheController {
         return result;
     }
 
-    public Result recache() {
+    public Result recache(@PathParam("d") String divisionId) {
         long startTime = System.currentTimeMillis();
 
         Result result = Results.html();
 
         try {
-            Season season = cacheSeason(12179);
+            if (StringUtils.isNumeric(divisionId)) {
 
-            for (Division division : season.getDivisions()) {
-                cacheTeamResults(division);
+                logger.info("Re-caching division {}", divisionId);
+
+                Division division = divisionDao.findById(Long.parseLong(divisionId));
+
+                if (null != division) {
+                    cacheTeamResults(division);
+                }
+            } else {
+                logger.info("Re-caching season {}", 12179);
+
+                Season season = cacheSeason(12179);
+
+                for (Division division : season.getDivisions()) {
+                    cacheTeamResults(division);
+                }
             }
 
             Metrics metrics = metricsDao.find();

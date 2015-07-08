@@ -35,6 +35,8 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/faq").with(ApplicationController.class, "faq");
 
         router.GET().route("/recache").with(CacheController.class, "recache");
+
+        router.GET().route("/recache/{d}").with(CacheController.class, "recache");
         
         router.GET().route("/recalculate").with(CacheController.class, "recalculate");
 
