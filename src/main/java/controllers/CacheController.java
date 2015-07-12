@@ -27,8 +27,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +38,8 @@ import dao.GameDao;
 import dao.MetricsDao;
 import dao.SeasonDao;
 import dao.TeamDao;
+import dto.ApiResult;
+import dto.Contestant;
 
 @Singleton
 @FilterWith(AppEngineFilter.class)
@@ -142,11 +142,10 @@ public class CacheController {
 
         for (Team team : division.getTeams()) {
 
-            WebTarget helloworldWebTargetWithQueryParam = webTarget.queryParam("TeamID", team.getId()).queryParam(
-                    "org", "youthlaxmn.org");
+            WebTarget webTargetWithQueryParam = webTarget.queryParam("TeamID", team.getId()).queryParam("org",
+                    "youthlaxmn.org");
 
-            Invocation.Builder invocationBuilder = helloworldWebTargetWithQueryParam
-                    .request(MediaType.APPLICATION_JSON);
+            Invocation.Builder invocationBuilder = webTargetWithQueryParam.request(MediaType.APPLICATION_JSON);
 
             Response response = invocationBuilder.get();
 
@@ -159,43 +158,47 @@ public class CacheController {
             int ties = 0;
             int gamesPlayed = 0;
 
-            for (GameResult gameResult : apiResult.teamResult.games) {
-                ContestantResult home = gameResult.home;
-                ContestantResult away = gameResult.away;
+            for (dto.Game game : apiResult.team.games) {
+                Contestant home = game.home;
+                Contestant away = game.away;
 
-                gamesPlayed++;
+                // Ignore games with no score, it never happened
+                if ((home.score + away.score) > 0) {
 
-                gameDao.findOrCreate(gameResult.id, home.teamId, home.score, away.teamId, away.score);
+                    gamesPlayed++;
 
-                if (home.teamId == team.getId()) {
-                    if (home.score > away.score) {
-                        wins++;
-                    } else if (home.score < away.score) {
-                        losses++;
+                    gameDao.findOrCreate(game.id, home.teamId, home.score, away.teamId, away.score, game.date, game.facility.name);
+
+                    if (home.teamId == team.getId()) {
+                        if (home.score > away.score) {
+                            wins++;
+                        } else if (home.score < away.score) {
+                            losses++;
+                        } else {
+                            ties++;
+                        }
                     } else {
-                        ties++;
+                        if (away.score > home.score) {
+                            wins++;
+                        } else if (away.score < home.score) {
+                            losses++;
+                        } else {
+                            ties++;
+                        }
                     }
-                } else {
-                    if (away.score > home.score) {
-                        wins++;
-                    } else if (away.score < home.score) {
-                        losses++;
-                    } else {
-                        ties++;
-                    }
+
+                    team.setGamesPlayed(gamesPlayed);
+                    team.setWins(wins);
+                    team.setLosses(losses);
+                    team.setTies(ties);
+                    team.setWp((1.0 * wins) / gamesPlayed);
+
+                    logger.info("Team {} has {} wins, {} losses and {} ties", team.getName(), team.getWins(),
+                            team.getLosses(), team.getTies());
+
+                    teamDao.save(team);
                 }
             }
-
-            team.setGamesPlayed(gamesPlayed);
-            team.setWins(wins);
-            team.setLosses(losses);
-            team.setTies(ties);
-            team.setWp((1.0 * wins) / gamesPlayed);
-
-            logger.info("Team {} has {} wins, {} losses and {} ties", team.getName(), team.getWins(), team.getLosses(),
-                    team.getTies());
-
-            teamDao.save(team);
         }
     }
 
@@ -205,12 +208,10 @@ public class CacheController {
 
         Client client = ClientBuilder.newClient();
 
-        WebTarget webTarget = client.target("https://api.leagueathletics.com/api/divisions");
+        WebTarget webTarget = client.target("https://api.leagueathletics.com/api/divisions")
+                .queryParam("season", 12179).queryParam("org", "youthlaxmn.org");
 
-        WebTarget helloworldWebTargetWithQueryParam = webTarget.queryParam("season", 12179).queryParam("org",
-                "youthlaxmn.org");
-
-        Invocation.Builder invocationBuilder = helloworldWebTargetWithQueryParam.request(MediaType.APPLICATION_JSON);
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
         Response response = invocationBuilder.get();
 
@@ -218,26 +219,25 @@ public class CacheController {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        Season[] seasons = mapper.readValue(responseAsString, Season[].class);
+        dto.Season[] seasons = mapper.readValue(responseAsString, dto.Season[].class);
 
-        for (Season seasonDto : seasons) {
-            season = seasonDao.findOrCreate(12179, seasonDto.getName());
+        for (dto.Season seasonDto : seasons) {
+            season = seasonDao.findOrCreate(12179, seasonDto.name);
 
-            logger.info("Season {} has {} divisions", seasonDto.getName(), seasonDto.getDivisions().size());
+            logger.info("Season {} has {} divisions", seasonDto.name, seasonDto.divisions.size());
 
-            for (Division divisionDto : seasonDto.getDivisions()) {
-                Division division = divisionDao
-                        .findOrCreate(divisionDto.getId(), season.getId(), divisionDto.getName());
+            for (dto.Division divisionDto : seasonDto.divisions) {
+                Division division = divisionDao.findOrCreate(divisionDto.id, season.getId(), divisionDto.name);
 
                 logger.info("Adding division {} to season {}", division.getName(), season.getName());
 
                 season.getDivisions().add(division);
 
-                for (Division subdivision : divisionDto.getDivisions()) {
+                for (dto.Division subdivision : divisionDto.divisions) {
 
-                    for (Team teamDto : subdivision.getTeams()) {
+                    for (dto.Team teamDto : subdivision.teams) {
 
-                        Team team = teamDao.findOrCreate(teamDto.getId(), division.getId(), teamDto.getName());
+                        Team team = teamDao.findOrCreate(teamDto.id, division.getId(), teamDto.name);
 
                         division.getTeams().add(team);
                     }
@@ -249,107 +249,76 @@ public class CacheController {
     }
 
     private void recalculate(Division division) {
-        
+
         logger.info("Recalculating division {}", division.getName());
-        
+
         division.setTeams(teamDao.findAllByDivision(division.getId()));
-        
+
         // Calculate OWP
         for (Team team : division.getTeams()) {
-            Set<Team> opponents = findAllOpponents(team.getId());
-            
+            Set<Team> opponents = findAllOpponents(team);
+
             // TODO: Throw out games against this team when calculating OWP
             // This means that owp won't be persistable again because it's
-            // definition varies from the perspective of the current team. 
-            
+            // definition varies from the perspective of the current team.
+
             int gamesPlayed = 0;
             int wins = 0;
-            
+
             for (Team opponent : opponents) {
                 gamesPlayed += opponent.getGamesPlayed();
                 wins += opponent.getWins();
             }
-            
+
             team.setOwp((1.0 * wins) / gamesPlayed);
         }
-        
+
         // TODO: Calculate OOWP
         for (Team team : division.getTeams()) {
-            Set<Team> opponents = findAllOpponents(team.getId());
-            
+            Set<Team> opponents = findAllOpponents(team);
+
             int gamesPlayed = 0;
             int wins = 0;
-            
+
             for (Team oppenent : opponents) {
-                Set<Team> opponentOpponents = findAllOpponents(oppenent.getId());
-                
+                Set<Team> opponentOpponents = findAllOpponents(oppenent);
+
                 for (Team opponentOpponent : opponentOpponents) {
                     gamesPlayed += opponentOpponent.getGamesPlayed();
                     wins += opponentOpponent.getWins();
                 }
             }
-            
+
             team.setOowp((1.0 * wins) / gamesPlayed);
         }
-        
+
         // Calculate RPI and save team
         for (Team team : division.getTeams()) {
             team.setRpi(0.25 * team.getWp() + 0.5 * team.getOwp() + 0.25 * team.getOowp());
-            
+
             teamDao.save(team);
         }
 
     }
 
-    private Set<Team> findAllOpponents(long teamId) {
-        Set<Team> opponents = new HashSet<Team>();
-        
-        for (Game game : gameDao.findByHomeTeamId(teamId)) {
-            opponents.add(teamDao.findById(game.getAwayTeamId()));
+    private Set<Team> findAllOpponents(Team team) {
+
+        if (null == team.getOpponents()) {
+            Set<Team> opponents = new HashSet<Team>();
+
+            for (Game game : gameDao.findByHomeTeamId(team.getId())) {
+                opponents.add(teamDao.findById(game.getAwayTeamId()));
+            }
+
+            for (Game game : gameDao.findByAwayTeamId(team.getId())) {
+                opponents.add(teamDao.findById(game.getHomeTeamId()));
+            }
+
+            team.setOpponents(opponents);
+
+            return opponents;
+        } else {
+            return team.getOpponents();
         }
-
-        for (Game game : gameDao.findByAwayTeamId(teamId)) {
-            opponents.add(teamDao.findById(game.getHomeTeamId()));
-        }
-        
-        return opponents;
-    }
-    
-        
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ApiResult {
-        @JsonProperty("results")
-        TeamResult teamResult;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class TeamResult {
-        @JsonProperty("teamName")
-        String name;
-
-        @JsonProperty("games")
-        GameResult[] games;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class GameResult {
-
-        @JsonProperty("id")
-        long id;
-
-        @JsonProperty("home")
-        ContestantResult home;
-
-        @JsonProperty("away")
-        ContestantResult away;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ContestantResult {
-        @JsonProperty("id")
-        int teamId;
-
-        @JsonProperty("score")
-        int score;
     }
 }

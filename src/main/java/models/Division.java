@@ -3,36 +3,28 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Index
-public class Division implements Comparable<Division>{
+public class Division implements Comparable<Division> {
     @Id
-    @JsonProperty("ID")
     private long id;
 
-    @JsonProperty("Name")
     private String name;
 
-    @JsonProperty("SubDivisions")
     private List<Division> divisions;
 
-    @JsonProperty("Teams")
     private List<Team> teams;
 
+    @Index
     private long seasonId;
 
-    // Required for JSON deserialization
     private Division() {
     }
 
-    public Division(long id,  long seasonId, String name) {
+    public Division(long id, long seasonId, String name) {
         this();
         this.id = id;
         this.seasonId = seasonId;

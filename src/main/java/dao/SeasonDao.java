@@ -31,9 +31,9 @@ public class SeasonDao {
         Season season = objectify.get().load().type(Season.class).filter("id", id).first().now();
 
         season.setDivisions(divisionDao.findAllBySeason(season.getId()));
-        
-        logger.info("Season was {} {}", season.getId(), season.getName());
-        
+
+        logger.info("Season was {} {} ({} divisions)", season.getId(), season.getName(), season.getDivisions().size());
+
         return season;
     }
 
@@ -41,14 +41,13 @@ public class SeasonDao {
         Season season = objectify.get().load().type(Season.class).filter("id", id).first().now();
 
         if (null == season) {
-            season = new Season(id, name);
-        } else {
-            season.setName(name);
-            season.setDivisions(new ArrayList<Division>());
+            season = new Season(id);
         }
+        season.setName(name);
+        season.setDivisions(new ArrayList<Division>());
 
         objectify.get().save().entity(season);
-        
+
         return season;
     }
 }

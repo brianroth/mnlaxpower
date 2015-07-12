@@ -15,12 +15,19 @@ public class GameDao {
     private final Logger logger = LoggerFactory.getLogger(GameDao.class);
 
     @Inject
+    private TeamDao teamDao;
+
+    @Inject
     private Provider<Objectify> objectify;
 
     public Game findById(long id) {
         Game game = objectify.get().load().type(Game.class).filter("id", id).first().now();
 
-        logger.info("Game was {} {} {}", game.getId(), game.getHomeTeamId(), game.getAwayTeamId());
+        if (null != game) {
+            logger.info("Game was {} {} {}", game.getId(), game.getHomeTeamId(), game.getAwayTeamId());
+        } else {
+            logger.info("Game {} was not found", id);
+        }
 
         return game;
     }
@@ -32,19 +39,24 @@ public class GameDao {
     public List<Game> findByAwayTeamId(long teamId) {
         return objectify.get().load().type(Game.class).filter("awayTeamId", teamId).list();
     }
-    
-    public Game findOrCreate(long id, long homeTeamId, int homeGoals, long awayTeamId, int awayGoals) {
+
+    public Game findOrCreate(long id, long homeTeamId, int homeGoals, long awayTeamId, int awayGoals, String date,
+            String location) {
         Game game = objectify.get().load().type(Game.class).filter("id", id).first().now();
 
         if (null == game) {
             logger.info("Game was null after load");
-            game = new Game(id, homeTeamId, homeGoals, awayTeamId, awayGoals);
-        } else {
-            game.setHomeTeamId(homeTeamId);
-            game.setHomeGoals(homeGoals);
-            game.setAwayTeamId(awayTeamId);
-            game.setAwayGoals(awayGoals);
+            game = new Game(id);
         }
+
+        game.setHomeTeamId(homeTeamId);
+        game.setHomeGoals(homeGoals);
+        game.setAwayTeamId(awayTeamId);
+        game.setAwayGoals(awayGoals);
+        game.setDate(date);
+        game.setLocation(location);
+        game.setAwayTeam(teamDao.findById(awayTeamId));
+        game.setHomeTeam(teamDao.findById(homeTeamId));
 
         objectify.get().save().entity(game);
 

@@ -1,28 +1,29 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Set;
+
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Index
 public class Team implements Comparable<Team> {
     @Id
-    @JsonProperty("ID")
     private long id;
 
-    @JsonProperty("Name")
     private String name;
 
     private int gamesPlayed;
 
     private int wins;
 
+    @Ignore
     private int losses;
 
+    @Ignore
     private int ties;
 
     private double wp;
@@ -30,10 +31,17 @@ public class Team implements Comparable<Team> {
     private double owp;
 
     private double oowp;
-    
+
     private double rpi;
-    
+
+    @Load
+    private Ref<Division> division;
+
+    @Index
     private long divisionId;
+
+    @Ignore
+    private transient Set<Team> opponents;
 
     // Required for JSON deserialization
     private Team() {
@@ -99,7 +107,7 @@ public class Team implements Comparable<Team> {
     }
 
     public void setWp(double wp) {
-        this.wp = (double)(Math.round(wp * 100)) / 100.0;
+        this.wp = (double) (Math.round(wp * 100)) / 100.0;
     }
 
     public int getGamesPlayed() {
@@ -127,7 +135,7 @@ public class Team implements Comparable<Team> {
     }
 
     public void setOwp(double owp) {
-        this.owp = (double)(Math.round(owp * 100)) / 100.0;
+        this.owp = (double) (Math.round(owp * 100)) / 100.0;
     }
 
     public double getRpi() {
@@ -135,7 +143,7 @@ public class Team implements Comparable<Team> {
     }
 
     public void setRpi(double rpi) {
-        this.rpi = (double)(Math.round(rpi * 100)) / 100.0;
+        this.rpi = (double) (Math.round(rpi * 100)) / 100.0;
     }
 
     public double getOowp() {
@@ -144,5 +152,21 @@ public class Team implements Comparable<Team> {
 
     public void setOowp(double oowp) {
         this.oowp = oowp;
+    }
+
+    public Set<Team> getOpponents() {
+        return opponents;
+    }
+
+    public void setOpponents(Set<Team> opponents) {
+        this.opponents = opponents;
+    }
+
+    public Division getDivision() {
+        return division.get();
+    }
+
+    public void setDivision(Division division) {
+        this.division = Ref.create(division);
     }
 }

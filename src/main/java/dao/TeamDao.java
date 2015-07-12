@@ -16,6 +16,9 @@ public class TeamDao {
     private final Logger logger = LoggerFactory.getLogger(TeamDao.class);
 
     @Inject
+    private DivisionDao divisionDao;
+
+    @Inject
     private Provider<Objectify> objectify;
 
     public List<Team> findAllByDivision(long divisionId) {
@@ -33,8 +36,11 @@ public class TeamDao {
             logger.info("Team was null after load");
 
             team = new Team(id, divisionId, name);
-            objectify.get().save().entity(team);
         }
+
+        team.setDivision(divisionDao.findById(divisionId));
+
+        objectify.get().save().entity(team);
 
         return team;
     }

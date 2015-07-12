@@ -22,6 +22,7 @@ import ninja.application.ApplicationRoutes;
 import controllers.ApplicationController;
 import controllers.CacheController;
 import controllers.MyAssetsController;
+import controllers.TeamsController;
 
 public class Routes implements ApplicationRoutes {
 
@@ -40,6 +41,8 @@ public class Routes implements ApplicationRoutes {
         
         router.GET().route("/recalculate").with(CacheController.class, "recalculate");
 
+        router.GET().route("/team/{teamId}").with(TeamsController.class, "show");
+        
         // /////////////////////////////////////////////////////////////////////
         // Assets (pictures / javascript)
         // /////////////////////////////////////////////////////////////////////
