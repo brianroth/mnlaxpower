@@ -21,7 +21,6 @@ import ninja.Result;
 import ninja.Results;
 import ninja.appengine.AppEngineFilter;
 import ninja.params.PathParam;
-import ninja.session.FlashScope;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -39,6 +38,7 @@ import dao.SeasonDao;
 import dao.TeamDao;
 import dto.ApiResult;
 import dto.Contestant;
+import filters.OptionsFilter;
 
 @Singleton
 @FilterWith(AppEngineFilter.class)
@@ -58,12 +58,12 @@ public class CacheController {
     @Inject
     private GameDao gameDao;
 
-    public Result recalculate(FlashScope flashScope) {
+    public Result recalculate() {
         Result result = Results.redirect("/");
 
         try {
 
-            Season season = seasonDao.findById(12179);
+            Season season = seasonDao.findById(OptionsFilter.DEFAULT_SEASON_ID);
 
             for (Division division : season.getDivisions()) {
                 recalculate(division);
@@ -91,9 +91,9 @@ public class CacheController {
                     cacheTeamResults(division);
                 }
             } else {
-                logger.info("Re-caching season {}", 12179);
+                logger.info("Re-caching season {}", OptionsFilter.DEFAULT_SEASON_ID);
 
-                Season season = cacheSeason(12179);
+                Season season = cacheSeason(OptionsFilter.DEFAULT_SEASON_ID);
 
                 for (Division division : season.getDivisions()) {
                     cacheTeamResults(division);
@@ -189,7 +189,7 @@ public class CacheController {
         Client client = ClientBuilder.newClient();
 
         WebTarget webTarget = client.target("https://api.leagueathletics.com/api/divisions")
-                .queryParam("season", 12179).queryParam("org", "youthlaxmn.org");
+                .queryParam("season", seasonId).queryParam("org", "youthlaxmn.org");
 
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
@@ -202,7 +202,7 @@ public class CacheController {
         dto.Season[] seasons = mapper.readValue(responseAsString, dto.Season[].class);
 
         for (dto.Season seasonDto : seasons) {
-            season = seasonDao.findOrCreate(12179, seasonDto.name);
+            season = seasonDao.findOrCreate(seasonId, seasonDto.name);
 
             logger.info("Season {} has {} divisions", seasonDto.name, seasonDto.divisions.size());
 
