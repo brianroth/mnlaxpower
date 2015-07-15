@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
-  <cron>
-    <url>/recache</url>
-    <description>Repopulate the cache every 4 hours</description>
-    <schedule>every 4 hours</schedule>
-  </cron>
-  <cron>
-    <url>/recalculate</url>
-    <description>Recalculate the RPI every 2 hours</description>
-    <schedule>every 2 hours</schedule>
-  </cron>
+	<cron>
+		<url>/recache/18301</url>
+		<description>Repopulate the cache for U15A every 4 hours</description>
+		<schedule>every 4 hours</schedule>
+	</cron>
+	<cron>
+		<url>/recache/18300</url>
+		<description>Repopulate the cache for U15B every 4 hours</description>
+		<schedule>every 4 hours</schedule>
+	</cron>
+	<cron>
+		<url>/recache/18299</url>
+		<description>Repopulate the cache for U13A every 4 hours</description>
+		<schedule>every 4 hours</schedule>
+	</cron>
+	<cron>
+		<url>/recache/18298</url>
+		<description>Repopulate the cache for U13B every 4 hours</description>
+		<schedule>every 4 hours</schedule>
+	</cron>
+	<cron>
+		<url>/recache/21800</url>
+		<description>Repopulate the cache for U11A every 4 hours</description>
+		<schedule>every 4 hours</schedule>
+	</cron>
+	<cron>
+		<url>/recache/17815</url>
+		<description>Repopulate the cache for U11B every 4 hours</description>
+		<schedule>every 4 hours</schedule>
+	</cron>
+	<cron>
+		<url>/recache/17813</url>
+		<description>Repopulate the cache for U9 every 4 hours</description>
+		<schedule>every 4 hours</schedule>
+	</cron>
+	<cron>
+		<url>/recalculate</url>
+		<description>Recalculate the RPI every 2 hours</description>
+		<schedule>every 2 hours</schedule>
+	</cron>
 </cronentries>

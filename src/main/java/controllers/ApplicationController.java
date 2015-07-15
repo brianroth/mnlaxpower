@@ -1,81 +1,84 @@
 package controllers;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 import models.Division;
-import models.Metrics;
-import models.Season;
+import ninja.Context;
 import ninja.FilterWith;
 import ninja.Result;
 import ninja.Results;
 import ninja.appengine.AppEngineFilter;
 import ninja.params.PathParam;
+import ninja.session.Session;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import dao.DivisionDao;
-import dao.MetricsDao;
-import dao.SeasonDao;
+import filters.OptionsFilter;
 
 @Singleton
-@FilterWith(AppEngineFilter.class)
+@FilterWith({ AppEngineFilter.class, OptionsFilter.class })
 public class ApplicationController {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm a z");
 
-    private final Logger logger = LoggerFactory.getLogger(CacheController.class);
-
-    @Inject
-    private SeasonDao seasonDao;
-    
     @Inject
     private DivisionDao divisionDao;
 
-    @Inject
-    private MetricsDao metricsDao;
+    public Result index(Context context, @PathParam("divisionId") String divisionId) {
 
-    public Result index(@PathParam("d") String divisionId) {
+        Session session = context.getSession();
 
-        logger.info("param d = {}", divisionId);
+        long selectedDivision = Long.parseLong(session.get(OptionsFilter.DIVISION_ID));
 
-        Season season = seasonDao.findById(12179);
-
-        long selectedDivision = 18301;
+        Division division = (Division) context.getAttribute(OptionsFilter.DIVISION);
 
         if (StringUtils.isNumeric(divisionId)) {
             selectedDivision = Long.parseLong(divisionId);
+            session.put(OptionsFilter.DIVISION_ID, divisionId);
+            division = divisionDao.findById(selectedDivision);
         }
-
-        Division division = divisionDao.findById(selectedDivision);
 
         Result result = Results.html();
 
-        Metrics metrics = metricsDao.find();
+        renderDate(result, "scheduleLastUpdated", division.getLastRecache());
+        renderDate(result, "rpiLastUpdated", division.getLastRecalculate());
 
-        if (null != metrics.getLastRecache()) {
-            DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("CDT"));
-            result.render("scheduleLastUpdated", DATE_FORMAT.format(metrics.getLastRecache()));
-        }
+        result.render("seasons", context.getAttribute(OptionsFilter.SEASONS));
+        result.render("divisions", context.getAttribute(OptionsFilter.DIVISIONS));
 
-        if (null != metrics.getLastRecalculate()) {
-            DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("CDT"));
-            result.render("rpiLastUpdated", DATE_FORMAT.format(metrics.getLastRecalculate()));
-        }
-
-        result.render("season", season);
+        result.render("season", context.getAttribute(OptionsFilter.SEASON));
         result.render("division", division);
         result.render("selectedDivision", selectedDivision);
+        result.render("selectedSeason", context.getAttribute(OptionsFilter.SEASON_ID));
 
         return result;
     }
 
-    public Result faq() {
-        return Results.html();
+    public Result faq(Context context) {
+        Result result = Results.html();
+
+        result.render("season", context.getAttribute(OptionsFilter.SEASON));
+        result.render("division", context.getAttribute(OptionsFilter.DIVISION));
+
+        result.render("seasons", context.getAttribute(OptionsFilter.SEASONS));
+        result.render("divisions", context.getAttribute(OptionsFilter.DIVISIONS));
+
+        result.render("selectedDivision", context.getAttribute(OptionsFilter.DIVISION_ID));
+        result.render("selectedSeason", context.getAttribute(OptionsFilter.SEASON_ID));
+
+        return result;
+    }
+
+    private void renderDate(Result result, String key, Date value) {
+        if (null != value) {
+            DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("US/Central"));
+            result.render(key, DATE_FORMAT.format(value));
+        }
     }
 }

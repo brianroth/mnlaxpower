@@ -5,6 +5,7 @@ import java.util.List;
 
 import models.Game;
 import models.Team;
+import ninja.Context;
 import ninja.FilterWith;
 import ninja.Result;
 import ninja.Results;
@@ -20,9 +21,10 @@ import com.google.inject.Singleton;
 import dao.DivisionDao;
 import dao.GameDao;
 import dao.TeamDao;
+import filters.OptionsFilter;
 
 @Singleton
-@FilterWith(AppEngineFilter.class)
+@FilterWith({ AppEngineFilter.class, OptionsFilter.class })
 public class TeamsController {
     private final Logger logger = LoggerFactory.getLogger(TeamsController.class);
 
@@ -32,9 +34,10 @@ public class TeamsController {
     @Inject
     private GameDao gameDao;
 
-    @Inject DivisionDao divisionDao;
-    
-    public Result show(@PathParam("teamId") String teamId) {
+    @Inject
+    DivisionDao divisionDao;
+
+    public Result show(Context context, @PathParam("teamId") String teamId) {
 
         logger.info("param teamId = {}", teamId);
 
@@ -49,7 +52,13 @@ public class TeamsController {
 
         result.render("team", team);
         result.render("games", games);
-        result.render("selectedDivision", team.getDivisionId());
+        result.render("selectedDivision", team.getDivision().getId());
+
+        result.render("selectedSeason", context.getAttribute(OptionsFilter.SEASON_ID));
+        result.render("season", context.getAttribute(OptionsFilter.SEASON));
+        result.render("division", team.getDivision());
+        result.render("seasons", context.getAttribute(OptionsFilter.SEASONS));
+        result.render("divisions", context.getAttribute(OptionsFilter.DIVISIONS));
 
         return result;
 

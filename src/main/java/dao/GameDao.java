@@ -8,17 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.googlecode.objectify.Objectify;
 
-public class GameDao {
+public class GameDao extends BusinessObjectDao<Game> {
     private final Logger logger = LoggerFactory.getLogger(GameDao.class);
 
     @Inject
     private TeamDao teamDao;
-
-    @Inject
-    private Provider<Objectify> objectify;
 
     public Game findById(long id) {
         Game game = objectify.get().load().type(Game.class).filter("id", id).first().now();

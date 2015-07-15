@@ -11,24 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.googlecode.objectify.Objectify;
 
-public class DivisionDao {
+public class DivisionDao extends BusinessObjectDao<Division> {
 
-    private final Logger logger = LoggerFactory.getLogger(SeasonDao.class);
-
-    @Inject
-    private Provider<Objectify> objectify;
+    private final Logger logger = LoggerFactory.getLogger(DivisionDao.class);
 
     @Inject
     private TeamDao teamDao;
 
     public List<Division> findAllBySeason(long seasonId) {
         List<Division> divisions = objectify.get().load().type(Division.class).filter("seasonId", seasonId).list();
-        
+
         Collections.sort(divisions);
-        
+
         return divisions;
     }
 

@@ -1,10 +1,42 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
-	<div class="container">
-		<div class="navbar-header">
-			<a class="navbar-brand" href="/">${i18n("header.title")}</a>
-		</div>
-		<div class="navbar-header navbar-right">
-			<a class="navbar-brand" href="/faq">F.A.Q.</a>
-		</div>
-	</div>
-</div>
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Boys LAX Relative Power Index</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          	<span class="glyphicon glyphicon-cog"></span>${division.name}&nbsp;<span class="caret">&nbsp;</span>
+          </a>
+          <ul class="dropdown-menu">
+          <#list divisions as division>
+          	<#if (division.id != selectedDivision)>
+          	<li role="presentation"><a role="menuitem" tabindex="-1" href="/division/${division.id}">${division.name}</a></li>
+          	</#if>
+          </#list>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          	<span class="glyphicon glyphicon-cog"></span>${season.name}&nbsp;<span class="caret">&nbsp;</span>
+          </a>
+          <ul class="dropdown-menu">
+          <#list seasons as season>
+          	<#if (season.id != selectedSeason)>
+          	<li role="presentation"><a role="menuitem" tabindex="-1" href="/season/${season.id}">${season.name}</a></li>
+          	</#if>
+          </#list>
+          </ul>
+        </li>
+        <li><a href="/faq">F.A.Q.</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

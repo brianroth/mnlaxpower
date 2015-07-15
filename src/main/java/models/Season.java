@@ -4,16 +4,20 @@ import java.util.List;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Season {
     @Id
     private long id;
 
+    @Index
+    private boolean base;
+    
     private String name;
 
     private List<Division> divisions;
-
+    
     private Season() {
 
     }
@@ -45,5 +49,13 @@ public class Season {
 
     public void setDivisions(List<Division> divisions) {
         this.divisions = divisions;
+    }
+
+    public boolean isBase() {
+        return base;
+    }
+
+    public void setBase(boolean base) {
+        this.base = base;
     }
 }

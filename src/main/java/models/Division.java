@@ -1,10 +1,12 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
@@ -12,12 +14,18 @@ public class Division implements Comparable<Division> {
     @Id
     private long id;
 
+    @Index
+    private boolean base;
+    
     private String name;
 
-    private List<Division> divisions;
-
+    @Ignore
     private List<Team> teams;
 
+    private Date lastRecalculate;
+
+    private Date lastRecache;
+    
     @Index
     private long seasonId;
 
@@ -56,14 +64,6 @@ public class Division implements Comparable<Division> {
         this.seasonId = seasonId;
     }
 
-    public List<Division> getDivisions() {
-        return divisions;
-    }
-
-    public void setDivisions(List<Division> divisions) {
-        this.divisions = divisions;
-    }
-
     public List<Team> getTeams() {
         return teams;
     }
@@ -75,5 +75,29 @@ public class Division implements Comparable<Division> {
     @Override
     public int compareTo(Division otherDivision) {
         return getName().compareTo(otherDivision.getName());
+    }
+
+    public boolean isBase() {
+        return base;
+    }
+
+    public void setBase(boolean base) {
+        this.base = base;
+    }
+
+    public Date getLastRecalculate() {
+        return lastRecalculate;
+    }
+
+    public void setLastRecalculate(Date lastRecalculate) {
+        this.lastRecalculate = lastRecalculate;
+    }
+
+    public Date getLastRecache() {
+        return lastRecache;
+    }
+
+    public void setLastRecache(Date lastRecache) {
+        this.lastRecache = lastRecache;
     }
 }

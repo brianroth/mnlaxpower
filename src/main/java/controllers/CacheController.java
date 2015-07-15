@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 
 import models.Division;
 import models.Game;
-import models.Metrics;
 import models.Season;
 import models.Team;
 import ninja.FilterWith;
@@ -22,6 +21,7 @@ import ninja.Result;
 import ninja.Results;
 import ninja.appengine.AppEngineFilter;
 import ninja.params.PathParam;
+import ninja.session.FlashScope;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -35,7 +35,6 @@ import com.google.inject.Singleton;
 
 import dao.DivisionDao;
 import dao.GameDao;
-import dao.MetricsDao;
 import dao.SeasonDao;
 import dao.TeamDao;
 import dto.ApiResult;
@@ -59,17 +58,10 @@ public class CacheController {
     @Inject
     private GameDao gameDao;
 
-    @Inject
-    private MetricsDao metricsDao;
-
-    public Result recalculate() {
-        long startTime = System.currentTimeMillis();
-
-        Result result = Results.html();
+    public Result recalculate(FlashScope flashScope) {
+        Result result = Results.redirect("/");
 
         try {
-
-            Metrics metrics = metricsDao.find();
 
             Season season = seasonDao.findById(12179);
 
@@ -77,24 +69,16 @@ public class CacheController {
                 recalculate(division);
             }
 
-            metrics.setLastRecalculate(new Date());
-
-            metricsDao.save(metrics);
-
         } catch (Exception e) {
             logger.error("An error has occurred updating cache", e);
             result.render("error", e.getMessage());
         }
 
-        result.render("time", System.currentTimeMillis() - startTime);
-
         return result;
     }
 
     public Result recache(@PathParam("d") String divisionId) {
-        long startTime = System.currentTimeMillis();
-
-        Result result = Results.html();
+        Result result = Results.redirect("/");
 
         try {
             if (StringUtils.isNumeric(divisionId)) {
@@ -116,18 +100,10 @@ public class CacheController {
                 }
             }
 
-            Metrics metrics = metricsDao.find();
-
-            metrics.setLastRecache(new Date());
-
-            metricsDao.save(metrics);
-
         } catch (Exception e) {
             logger.error("An error has occurred updating cache", e);
             result.render("error", e.getMessage());
         }
-
-        result.render("time", System.currentTimeMillis() - startTime);
 
         return result;
     }
@@ -167,7 +143,8 @@ public class CacheController {
 
                     gamesPlayed++;
 
-                    gameDao.findOrCreate(game.id, home.teamId, home.score, away.teamId, away.score, game.date, game.facility.name);
+                    gameDao.findOrCreate(game.id, home.teamId, home.score, away.teamId, away.score, game.date,
+                            game.facility.name);
 
                     if (home.teamId == team.getId()) {
                         if (home.score > away.score) {
@@ -200,6 +177,9 @@ public class CacheController {
                 }
             }
         }
+
+        division.setLastRecache(new Date());
+        divisionDao.save(division);
     }
 
     private Season cacheSeason(long seasonId) throws JsonParseException, JsonMappingException, IOException {
@@ -299,6 +279,8 @@ public class CacheController {
             teamDao.save(team);
         }
 
+        division.setLastRecalculate(new Date());
+        divisionDao.save(division);
     }
 
     private Set<Team> findAllOpponents(Team team) {
