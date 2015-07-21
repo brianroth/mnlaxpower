@@ -14,6 +14,8 @@ import ninja.params.PathParam;
 import ninja.session.Session;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,12 +27,16 @@ import filters.OptionsFilter;
 @FilterWith({ AppEngineFilter.class, OptionsFilter.class })
 public class ApplicationController {
 
+    private final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
+
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm a z");
 
     @Inject
     private DivisionDao divisionDao;
 
     public Result index(Context context, @PathParam("divisionId") String divisionId) {
+
+        logger.info("index({}) param divisionId={}", context.getRemoteAddr(), divisionId);
 
         Session session = context.getSession();
 
@@ -46,8 +52,15 @@ public class ApplicationController {
 
         Result result = Results.html();
 
-        renderDate(result, "scheduleLastUpdated", division.getLastRecache());
-        renderDate(result, "rpiLastUpdated", division.getLastRecalculate());
+        if (null != division.getLastRecache()) {
+            logger.info("index({}) param scheduleLastUpdated={}", context.getRemoteAddr(), renderDate(division.getLastRecache()));
+            result.render("scheduleLastUpdated", renderDate(division.getLastRecache()));
+        }
+
+        if (null != division.getLastRecalculate()) {
+            logger.info("index({}) param rpiLastUpdated={}", context.getRemoteAddr(), renderDate(division.getLastRecalculate()));
+            result.render("rpiLastUpdated", renderDate(division.getLastRecalculate()));
+        }
 
         result.render("seasons", context.getAttribute(OptionsFilter.SEASONS));
         result.render("divisions", context.getAttribute(OptionsFilter.DIVISIONS));
@@ -75,10 +88,8 @@ public class ApplicationController {
         return result;
     }
 
-    private void renderDate(Result result, String key, Date value) {
-        if (null != value) {
-            DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("US/Central"));
-            result.render(key, DATE_FORMAT.format(value));
-        }
+    private String renderDate(Date value) {
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("US/Central"));
+        return DATE_FORMAT.format(value);
     }
 }

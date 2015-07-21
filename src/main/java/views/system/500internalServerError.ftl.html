@@ -1,15 +1,15 @@
-<#import "../layout/defaultLayout.ftl.html" as layout>
-<@layout.myLayout "Error. Forbidden.">
+<#import "../layout/errorLayout.ftl.html" as layout>
+<@layout.myLayout "Broken.">
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <div class="error-template">
                 <h1>
-                    Oops!</h1>
+                    Darn it!</h1>
                 <h2>
-                    403 Forbidden</h2>
+                    500 Broken</h2>
                 <div class="error-details">
-                    Sorry, an error has occured. Requested page is forbidden!
+                    Sorry, Brian screwed up!
                 </div>
             </div>
         </div>

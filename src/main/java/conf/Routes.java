@@ -48,11 +48,6 @@ public class Routes implements ApplicationRoutes {
         // /////////////////////////////////////////////////////////////////////
         router.GET().route("/assets/webjars/{fileName: .*}").with(AssetsController.class, "serveWebJars");
         router.GET().route("/assets/{fileName: .*}").with(MyAssetsController.class, "serveStatic");
-        
-        // /////////////////////////////////////////////////////////////////////
-        // Index / Catchall shows index page
-        // /////////////////////////////////////////////////////////////////////
-        router.GET().route("/.*").with(ApplicationController.class, "index");
     }
 
 }
