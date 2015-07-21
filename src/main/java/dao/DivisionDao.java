@@ -30,9 +30,9 @@ public class DivisionDao extends BusinessObjectDao<Division> {
     public Division findById(long id) {
         Division division = objectify.get().load().type(Division.class).filter("id", id).first().now();
 
-        division.setTeams(teamDao.findAllByDivision(division.getId()));
-
-        logger.info("Division was {} {}", division.getId(), division.getName());
+        if (null != division) {
+            division.setTeams(teamDao.findAllByDivision(division.getId()));
+        }
 
         return division;
     }
@@ -44,9 +44,16 @@ public class DivisionDao extends BusinessObjectDao<Division> {
             logger.info("Division was null after load");
 
             division = new Division(id, seasonId, name);
+
+            logger.info("Creating division {}({}) to season {}", division.getName(), division.getId(),
+                    division.getSeasonId());
+
             objectify.get().save().entity(division);
         } else {
-            logger.info("Division was not null after load");
+
+            logger.info("Division {}({}) belonging to season {} was not null after load: id {} seasonId {}",
+                    division.getName(), division.getId(), division.getSeasonId(), id, seasonId);
+
             division.setTeams(new ArrayList<Team>());
         }
 

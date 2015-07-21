@@ -10,7 +10,7 @@ public abstract class BusinessObjectDao<T> {
     protected Provider<Objectify> objectify;
     
     public T save(T t) {
-        objectify.get().save().entity(t);
+        objectify.get().save().entity(t).now();
 
         return t;
     }

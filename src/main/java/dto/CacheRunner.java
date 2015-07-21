@@ -39,6 +39,51 @@ public class CacheRunner {
         return seasons;
     }
 
+    public Division[] getDivisions(long seasonId) throws JsonParseException, JsonMappingException, IOException {
+
+        Client client = ClientBuilder.newClient();
+
+        WebTarget webTarget = client.target("https://api.leagueathletics.com/api/divisions")
+                .queryParam("season", seasonId).queryParam("org", "youthlaxmn.org");
+
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+
+        Response response = invocationBuilder.get();
+
+        String responseAsString = response.readEntity(String.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        dto.Season[] seasons = mapper.readValue(responseAsString, dto.Season[].class);
+
+        for (Season season : seasons) {
+
+            logger.info("Season {} has {} divisions", season.name, season.divisions.size());
+
+            for (Division division : season.divisions) {
+
+                logger.info("Season {}({}) Division {}({})", season.name, seasonId, division.name, division.id);
+                
+//                for (Team team : division.teams) {
+//                    logger.info("Season {} ({}) division {}({}) team {} ", season.name, seasonId, division.name,
+//                            division.id, team.name);
+//                }
+
+                for (Division subdivision : division.divisions) {
+
+                    logger.info("Season {}({}) Division {}({})", season.name, seasonId, subdivision.name, subdivision.id);
+                    
+                    for (Team team : subdivision.teams) {
+//                        logger.info("Season {} ({}) division {}({}) team {} ", season.name, seasonId, division.name,
+//                                division.id, team.name);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public void getTeams() throws JsonParseException, JsonMappingException, IOException {
 
         for (Season season : getSeasons()) {
@@ -99,7 +144,6 @@ public class CacheRunner {
         int wins = 0;
         int losses = 0;
         int ties = 0;
-        int gamesPlayed = 0;
 
         for (dto.Game game : apiResult.team.games) {
             Contestant home = game.home;
@@ -107,8 +151,6 @@ public class CacheRunner {
 
             // Ignore games with no score, it never happened
             if ((home.score + away.score) > 0) {
-
-                gamesPlayed++;
 
                 logger.info("Game home {} away {} date {} location {}", game.home.teamId, game.away.teamId, game.date,
                         game.facility.name);
@@ -140,7 +182,13 @@ public class CacheRunner {
     public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException {
         CacheRunner runner = new CacheRunner();
 
-        runner.getTeams();
-    }
+        Season[] seasons = runner.getSeasons();
 
+        for (Season season : seasons) {
+            runner.getDivisions(season.id);
+        }
+        
+        
+        
+    }
 }

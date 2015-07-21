@@ -23,11 +23,19 @@ public class SeasonDao extends BusinessObjectDao<Season> {
     }
 
     public Season findById(long id) {
+        logger.info("find season by id {}", id);
+
         Season season = objectify.get().load().type(Season.class).filter("id", id).first().now();
 
-        season.setDivisions(divisionDao.findAllBySeason(season.getId()));
+        if (null != season) {
 
-        logger.info("Season was {} {} ({} divisions)", season.getId(), season.getName(), season.getDivisions().size());
+            season.setDivisions(divisionDao.findAllBySeason(season.getId()));
+
+            logger.info("Season was {} {} ({} divisions)", season.getId(), season.getName(), season.getDivisions()
+                    .size());
+        } else {
+            logger.info("Season not found");
+        }
 
         return season;
     }
