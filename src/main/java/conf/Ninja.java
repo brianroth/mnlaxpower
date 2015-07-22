@@ -21,7 +21,7 @@ public class Ninja extends NinjaDefault {
     @Override
     public Result onException(Context context, Exception exception) {
 
-        Result result = Results.badRequest()
+        Result result = Results.internalServerError()
                 .supportedContentTypes(Result.TEXT_HTML, Result.APPLICATION_JSON, Result.APPLICATION_XML)
                 .fallbackContentType(Result.TEXT_HTML).render("message", "Oh no")
                 .template(NinjaConstant.LOCATION_VIEW_FTL_HTML_INTERNAL_SERVER_ERROR);
