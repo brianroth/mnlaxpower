@@ -6,7 +6,8 @@
 </ol>
 
 <div class="table-responsive">
-	<table class="table table-striped table-condensed">
+	<table id="team" class="table table-striped table-condensed">
+		<thead>
 		<tr>
 			<th>Date</th>
 			<th>Location</th>
@@ -15,24 +16,36 @@
 			<th class="col-sm-1">GF</th>
 			<th class="col-sm-1">GA</th>
 		</tr>
+		</thead>
+		<tbody>
 		<#list games as game>
 		<tr>
 			<td>${game.date}</td>
 			<td>${game.location}</td>
 			<#if team.id == game.homeTeamId>
-			<td>${game.awayTeam.name}</td>
+			<td><a href="/team/${game.awayTeam.id}">${game.awayTeam.name}</a></td>
 			<td>${game.awayTeam.wp}</td>
 			<td>${game.homeGoals}</td>
 			<td>${game.awayGoals}</td>
 			<#else>
-			<td>${game.homeTeam.name}</td>
+			<td><a href="/team/${game.homeTeam.id}">${game.homeTeam.name}</a></td>
 			<td>${game.homeTeam.wp}</td>
 			<td>${game.awayGoals}</td>
 			<td>${game.homeGoals}</td>
 			</#if>
 		</tr>
 		</#list>
+		</tbody>
 	</table>
 </div>
 <a href='http://leag1.com/Results.asp?MyTeam=${team.id}&org=youthlaxmn.org'>YLM site for ${team.name}</a>
 </@layout.myLayout>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('#team').dataTable({
+		    paging: false,
+		    searching: false,
+		    "order": [[ 0, "asc" ]]
+		} );
+	} );
+</script>
