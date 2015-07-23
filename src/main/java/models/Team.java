@@ -134,6 +134,10 @@ public class Team implements Comparable<Team> {
         return owp;
     }
 
+    public int getPoints() {
+       return 3 * getWins(); 
+    }
+    
     public void setOwp(double owp) {
         this.owp = (double) (Math.round(owp * 100)) / 100.0;
     }

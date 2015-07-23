@@ -7,6 +7,7 @@
 			<th>Name</th>
 			<th class="col-sm-1">Won</th>
 			<th class="col-sm-1">Played</th>
+			<th class="col-sm-1">Points</th>
 			<th id="rpi" class="col-sm-1">RPI</th>
 		</tr>
 		</thead>
@@ -16,6 +17,7 @@
 				href="/team/${team.id}">${team.name}</a></td>
 			<td>${team.wins}</td>
 			<td>${team.gamesPlayed}</td>
+			<td>${team.points}</td>
 			<td>${team.rpi}</td>
 		</tr>
 		</#list>
@@ -29,7 +31,7 @@
 		$('#division').dataTable({
 		    paging: false,
 		    searching: false,
-		    "order": [[ 3, "desc" ]]
+		    "order": [[ 4, "desc" ]]
 		} );
 	} );
 </script>
