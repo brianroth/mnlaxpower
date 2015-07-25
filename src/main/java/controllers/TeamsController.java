@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import dao.DivisionDao;
 import dao.GameDao;
 import dao.TeamDao;
 import filters.OptionsFilter;
@@ -33,9 +32,6 @@ public class TeamsController {
 
     @Inject
     private GameDao gameDao;
-
-    @Inject
-    DivisionDao divisionDao;
 
     public Result show(Context context, @PathParam("teamId") String teamId) {
 
@@ -61,7 +57,21 @@ public class TeamsController {
         result.render("divisions", context.getAttribute(OptionsFilter.DIVISIONS));
 
         return result;
-
     }
 
+    public TeamDao getTeamDao() {
+        return teamDao;
+    }
+
+    public void setTeamDao(TeamDao teamDao) {
+        this.teamDao = teamDao;
+    }
+
+    public GameDao getGameDao() {
+        return gameDao;
+    }
+
+    public void setGameDao(GameDao gameDao) {
+        this.gameDao = gameDao;
+    }
 }

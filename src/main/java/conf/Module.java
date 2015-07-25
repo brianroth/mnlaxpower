@@ -16,6 +16,8 @@
 
 package conf;
 
+import service.JerseyService;
+import service.JerseyServiceImpl;
 import ninja.appengine.AppEngineModule;
 
 import com.google.inject.AbstractModule;
@@ -28,6 +30,7 @@ public class Module extends AbstractModule {
     protected void configure() {
         // bind your Objectify.class to your provider like so:
         bind(Objectify.class).toProvider(ObjectifyProvider.class);
+        bind(JerseyService.class).to(JerseyServiceImpl.class);
 
         install(new AppEngineModule());
     }

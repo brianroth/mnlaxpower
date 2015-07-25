@@ -40,35 +40,34 @@ public class ApplicationController {
 
         Session session = context.getSession();
 
-        long selectedDivision = Long.parseLong(session.get(OptionsFilter.DIVISION_ID));
-
         Division division = (Division) context.getAttribute(OptionsFilter.DIVISION);
 
         if (StringUtils.isNumeric(divisionId)) {
-            selectedDivision = Long.parseLong(divisionId);
             session.put(OptionsFilter.DIVISION_ID, divisionId);
-            division = divisionDao.findById(selectedDivision);
+            division = divisionDao.findById(Long.parseLong(divisionId));
         }
 
         Result result = Results.html();
 
         if (null != division.getLastRecache()) {
-            logger.info("index({}) param scheduleLastUpdated={}", context.getRemoteAddr(), renderDate(division.getLastRecache()));
+            logger.info("index({}) param scheduleLastUpdated={}", context.getRemoteAddr(),
+                    renderDate(division.getLastRecache()));
             result.render("scheduleLastUpdated", renderDate(division.getLastRecache()));
         }
 
         if (null != division.getLastRecalculate()) {
-            logger.info("index({}) param rpiLastUpdated={}", context.getRemoteAddr(), renderDate(division.getLastRecalculate()));
+            logger.info("index({}) param rpiLastUpdated={}", context.getRemoteAddr(),
+                    renderDate(division.getLastRecalculate()));
             result.render("rpiLastUpdated", renderDate(division.getLastRecalculate()));
         }
 
-        result.render("seasons", context.getAttribute(OptionsFilter.SEASONS));
-        result.render("divisions", context.getAttribute(OptionsFilter.DIVISIONS));
+        result.render(OptionsFilter.SEASONS, context.getAttribute(OptionsFilter.SEASONS));
+        result.render(OptionsFilter.DIVISIONS, context.getAttribute(OptionsFilter.DIVISIONS));
 
-        result.render("season", context.getAttribute(OptionsFilter.SEASON));
-        result.render("division", division);
-        result.render("selectedDivision", selectedDivision);
-        result.render("selectedSeason", context.getAttribute(OptionsFilter.SEASON_ID));
+        result.render(OptionsFilter.SEASON, context.getAttribute(OptionsFilter.SEASON));
+        result.render(OptionsFilter.DIVISION, division);
+        result.render("selectedDivision", division.getId());
+        result.render("selectedSeason", division.getSeasonId());
 
         return result;
     }
@@ -91,5 +90,13 @@ public class ApplicationController {
     private String renderDate(Date value) {
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("US/Central"));
         return DATE_FORMAT.format(value);
+    }
+
+    public DivisionDao getDivisionDao() {
+        return divisionDao;
+    }
+
+    public void setDivisionDao(DivisionDao divisionDao) {
+        this.divisionDao = divisionDao;
     }
 }

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 public class TeamDao extends BusinessObjectDao<Team> {
-    
+
     private final Logger logger = LoggerFactory.getLogger(TeamDao.class);
 
     @Inject
@@ -25,8 +25,8 @@ public class TeamDao extends BusinessObjectDao<Team> {
         return teams;
     }
 
-    public Team findOrCreate(Long id, long divisionId, String name) {
-        Team team = objectify.get().load().type(Team.class).filter("id", id).first().now();
+    public Team findOrCreate(long id, long divisionId, String name) {
+        Team team = findById(id);
 
         if (null == team) {
             logger.info("Team was null after load");
@@ -36,12 +36,8 @@ public class TeamDao extends BusinessObjectDao<Team> {
 
         team.setDivision(divisionDao.findById(divisionId));
 
-        objectify.get().save().entity(team);
+        save(team);
 
         return team;
-    }
-
-    public Team findById(long id) {
-        return objectify.get().load().type(Team.class).filter("id", id).first().now();
     }
 }

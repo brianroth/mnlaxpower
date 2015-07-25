@@ -15,18 +15,6 @@ public class GameDao extends BusinessObjectDao<Game> {
     @Inject
     private TeamDao teamDao;
 
-    public Game findById(long id) {
-        Game game = objectify.get().load().type(Game.class).filter("id", id).first().now();
-
-        if (null != game) {
-            logger.info("Game was {} {} {}", game.getId(), game.getHomeTeamId(), game.getAwayTeamId());
-        } else {
-            logger.info("Game {} was not found", id);
-        }
-
-        return game;
-    }
-
     public List<Game> findByHomeTeamId(long teamId) {
         return objectify.get().load().type(Game.class).filter("homeTeamId", teamId).list();
     }
@@ -37,7 +25,8 @@ public class GameDao extends BusinessObjectDao<Game> {
 
     public Game findOrCreate(long id, long homeTeamId, int homeGoals, long awayTeamId, int awayGoals, String date,
             String location) {
-        Game game = objectify.get().load().type(Game.class).filter("id", id).first().now();
+
+        Game game = super.findById(id);
 
         if (null == game) {
             logger.info("Game was null after load");
@@ -53,7 +42,7 @@ public class GameDao extends BusinessObjectDao<Game> {
         game.setAwayTeam(teamDao.findById(awayTeamId));
         game.setHomeTeam(teamDao.findById(homeTeamId));
 
-        objectify.get().save().entity(game);
+        save(game);
 
         return game;
     }

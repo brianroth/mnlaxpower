@@ -25,7 +25,7 @@ public class SeasonDao extends BusinessObjectDao<Season> {
     public Season findById(long id) {
         logger.info("find season by id {}", id);
 
-        Season season = objectify.get().load().type(Season.class).filter("id", id).first().now();
+        Season season = super.findById(id);
 
         if (null != season) {
 
@@ -41,7 +41,7 @@ public class SeasonDao extends BusinessObjectDao<Season> {
     }
 
     public Season findOrCreate(long id, String name) {
-        Season season = objectify.get().load().type(Season.class).filter("id", id).first().now();
+        Season season = super.findById(id);
 
         if (null == season) {
             season = new Season(id);
@@ -49,7 +49,7 @@ public class SeasonDao extends BusinessObjectDao<Season> {
         season.setName(name);
         season.setDivisions(new ArrayList<Division>());
 
-        objectify.get().save().entity(season);
+        save(season);;
 
         return season;
     }

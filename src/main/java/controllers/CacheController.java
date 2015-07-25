@@ -5,13 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import models.Division;
 import models.Game;
 import models.Season;
@@ -26,9 +19,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import service.JerseyService;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,7 +30,6 @@ import dao.DivisionDao;
 import dao.GameDao;
 import dao.SeasonDao;
 import dao.TeamDao;
-import dto.ApiResult;
 import dto.Contestant;
 import filters.OptionsFilter;
 
@@ -45,6 +38,9 @@ import filters.OptionsFilter;
 public class CacheController {
 
     private final Logger logger = LoggerFactory.getLogger(CacheController.class);
+
+    @Inject
+    private JerseyService apiService;
 
     @Inject
     private SeasonDao seasonDao;
@@ -62,7 +58,6 @@ public class CacheController {
         Result result = Results.redirect("/");
 
         try {
-
             Season season = seasonDao.findById(OptionsFilter.DEFAULT_SEASON_ID);
 
             for (Division division : season.getDivisions()) {
@@ -110,31 +105,14 @@ public class CacheController {
 
     private void cacheTeamResults(Division division) throws JsonParseException, JsonMappingException, IOException {
 
-        Client client = ClientBuilder.newClient();
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        WebTarget webTarget = client.target("https://api.leagueathletics.com/api/results");
-
         for (Team team : division.getTeams()) {
-
-            WebTarget webTargetWithQueryParam = webTarget.queryParam("TeamID", team.getId()).queryParam("org",
-                    "youthlaxmn.org");
-
-            Invocation.Builder invocationBuilder = webTargetWithQueryParam.request(MediaType.APPLICATION_JSON);
-
-            Response response = invocationBuilder.get();
-
-            String responseAsString = response.readEntity(String.class);
-
-            ApiResult apiResult = mapper.readValue(responseAsString, ApiResult.class);
 
             int wins = 0;
             int losses = 0;
             int ties = 0;
             int gamesPlayed = 0;
 
-            for (dto.Game game : apiResult.team.games) {
+            for (dto.Game game : apiService.readGames(team.getId())) {
                 Contestant home = game.home;
                 Contestant away = game.away;
 
@@ -186,20 +164,7 @@ public class CacheController {
 
         Season season = null;
 
-        Client client = ClientBuilder.newClient();
-
-        WebTarget webTarget = client.target("https://api.leagueathletics.com/api/divisions")
-                .queryParam("season", seasonId).queryParam("org", "youthlaxmn.org");
-
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-
-        Response response = invocationBuilder.get();
-
-        String responseAsString = response.readEntity(String.class);
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        dto.Season[] seasons = mapper.readValue(responseAsString, dto.Season[].class);
+        dto.Season[] seasons = apiService.readSeason(seasonId);
 
         for (dto.Season seasonDto : seasons) {
             season = seasonDao.findOrCreate(seasonId, seasonDto.name);
@@ -302,5 +267,45 @@ public class CacheController {
         } else {
             return team.getOpponents();
         }
+    }
+
+    public SeasonDao getSeasonDao() {
+        return seasonDao;
+    }
+
+    public void setSeasonDao(SeasonDao seasonDao) {
+        this.seasonDao = seasonDao;
+    }
+
+    public DivisionDao getDivisionDao() {
+        return divisionDao;
+    }
+
+    public void setDivisionDao(DivisionDao divisionDao) {
+        this.divisionDao = divisionDao;
+    }
+
+    public TeamDao getTeamDao() {
+        return teamDao;
+    }
+
+    public void setTeamDao(TeamDao teamDao) {
+        this.teamDao = teamDao;
+    }
+
+    public GameDao getGameDao() {
+        return gameDao;
+    }
+
+    public void setGameDao(GameDao gameDao) {
+        this.gameDao = gameDao;
+    }
+
+    public JerseyService getApiService() {
+        return apiService;
+    }
+
+    public void setApiService(JerseyService apiService) {
+        this.apiService = apiService;
     }
 }

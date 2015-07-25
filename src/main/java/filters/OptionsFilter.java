@@ -29,9 +29,9 @@ public class OptionsFilter implements Filter {
 
     public static final String DIVISION_ID = "divisionId";
 
-    public static final long DEFAULT_DIVISION_ID = 18301;
+    public static final long DEFAULT_DIVISION_ID = 18301l;
 
-    public static final long DEFAULT_SEASON_ID = 12179;
+    public static final long DEFAULT_SEASON_ID = 12179l;
 
     @Inject
     private SeasonDao seasonDao;
@@ -68,9 +68,6 @@ public class OptionsFilter implements Filter {
         
         context.setAttribute(DIVISIONS, season.getDivisions());
         context.setAttribute(SEASONS, seasonDao.findAll());
-        
-        context.setAttribute(SEASON_ID, seasonId);
-        context.setAttribute(DIVISION_ID, divisionId);
         
         return filterChain.next(context);
     }

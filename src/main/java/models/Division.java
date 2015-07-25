@@ -100,4 +100,29 @@ public class Division implements Comparable<Division> {
     public void setLastRecache(Date lastRecache) {
         this.lastRecache = lastRecache;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + (int) (seasonId ^ (seasonId >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Division other = (Division) obj;
+        if (id != other.id)
+            return false;
+        if (seasonId != other.seasonId)
+            return false;
+        return true;
+    }
 }
