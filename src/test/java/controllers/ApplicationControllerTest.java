@@ -1,7 +1,6 @@
 package controllers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
@@ -112,5 +111,41 @@ public class ApplicationControllerTest {
         assertEquals(division.getSeasonId(), map.get("selectedSeason"));
         assertEquals("2015-12-25 12:15 PM CST", map.get("scheduleLastUpdated"));
         assertEquals("2015-12-25 08:15 AM CST", map.get("rpiLastUpdated"));
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testFaq() throws Exception {
+        Season season = new Season(5678);
+
+        Season[] seasons = new Season[] { season };
+
+        Division division = new Division(1234, season.getId(), "Joy Division");
+        division.setLastRecache(DateUtils.parseDate("2015:12:25 12:15:01", new String[] { "yyyy:MM:dd HH:mm:ss" }));
+        division.setLastRecalculate(DateUtils.parseDate("2015:12:25 8:15:01", new String[] { "yyyy:MM:dd HH:mm:ss" }));
+
+        when(divisionDao.findById(division.getId())).thenReturn(division);
+
+        context.setAttribute(OptionsFilter.DIVISION, division);
+        context.setAttribute(OptionsFilter.DIVISION_ID, division.getId());
+        context.setAttribute(OptionsFilter.DIVISIONS, season.getDivisions());
+        
+        context.setAttribute(OptionsFilter.SEASON_ID, season.getId());
+        context.setAttribute(OptionsFilter.SEASON, season);
+        context.setAttribute(OptionsFilter.SEASONS, seasons);
+
+        assertNull(context.getSession().get(OptionsFilter.DIVISION_ID));
+
+        Result result = controller.faq(context);
+
+        Map<String, Object> map = (Map<String, Object>) result.getRenderable();
+        
+        assertEquals(season, map.get(OptionsFilter.SEASON));
+        assertEquals(seasons, map.get(OptionsFilter.SEASONS));
+        assertEquals(division, map.get(OptionsFilter.DIVISION));
+        assertEquals(season.getDivisions(), map.get(OptionsFilter.DIVISIONS));
+        assertEquals(division.getId(), map.get("selectedDivision"));
+        assertEquals(division.getSeasonId(), map.get("selectedSeason"));
+
     }
 }

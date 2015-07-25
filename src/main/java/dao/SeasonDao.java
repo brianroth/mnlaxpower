@@ -19,11 +19,7 @@ public class SeasonDao extends BusinessObjectDao<Season> {
     private DivisionDao divisionDao;
 
     public List<Season> findAll() {
-        List<Season> seasons = objectify.get().load().type(Season.class).list();
-        
-        logger.info("XXXXXXXXX seasons = {}", seasons);
-        
-        return seasons;
+        return objectify.get().load().type(Season.class).list();
     }
 
     public Season findById(long id) {
@@ -53,7 +49,8 @@ public class SeasonDao extends BusinessObjectDao<Season> {
         season.setName(name);
         season.setDivisions(new ArrayList<Division>());
 
-        save(season);;
+        save(season);
+        ;
 
         return season;
     }

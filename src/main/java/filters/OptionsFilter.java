@@ -9,8 +9,6 @@ import ninja.Result;
 import ninja.session.Session;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
@@ -18,8 +16,6 @@ import dao.DivisionDao;
 import dao.SeasonDao;
 
 public class OptionsFilter implements Filter {
-
-    private final Logger logger = LoggerFactory.getLogger(OptionsFilter.class);
     
     public static final String SEASON = "season";
 
@@ -66,15 +62,14 @@ public class OptionsFilter implements Filter {
         session.put(DIVISION_ID, Long.toString(divisionId));
 
         Season season = seasonDao.findById(seasonId);
-
-        logger.info("XXXXXXXXX season = {}", season);
         
         context.setAttribute(SEASON_ID, season.getId());
         context.setAttribute(SEASON, season);
-        context.setAttribute(DIVISION, division);
-        
-        context.setAttribute(DIVISIONS, season.getDivisions());
         context.setAttribute(SEASONS, seasonDao.findAll());
+        
+        context.setAttribute(DIVISION, division);
+        context.setAttribute(DIVISIONS, season.getDivisions());
+        context.setAttribute(DIVISION_ID, division.getId());
         
         return filterChain.next(context);
     }
