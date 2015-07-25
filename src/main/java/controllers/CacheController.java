@@ -156,6 +156,7 @@ public class CacheController {
             }
         }
 
+        division = divisionDao.findById(division.getId());
         division.setLastRecache(new Date());
         divisionDao.save(division);
     }
@@ -244,6 +245,7 @@ public class CacheController {
             teamDao.save(team);
         }
 
+        division = divisionDao.findById(division.getId());
         division.setLastRecalculate(new Date());
         divisionDao.save(division);
     }

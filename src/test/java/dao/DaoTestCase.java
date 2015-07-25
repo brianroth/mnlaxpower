@@ -7,8 +7,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import service.ApiService;
-import service.ApiServiceImpl;
+import service.JerseyService;
+import service.JerseyServiceImpl;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -40,7 +40,7 @@ public abstract class DaoTestCase {
         protected void configure() {
             // bind your Objectify.class to your provider like so:
             bind(Objectify.class).toProvider(ObjectifyProvider.class);
-            bind(ApiService.class).to(ApiServiceImpl.class);
+            bind(JerseyService.class).to(JerseyServiceImpl.class);
         }
 
     }

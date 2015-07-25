@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import service.ApiService;
+import service.JerseyService;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -35,7 +35,7 @@ import filters.OptionsFilter;
 public class CacheControllerTest {
 
     @Mock
-    private ApiService apiService;
+    private JerseyService apiService;
 
     @Mock
     private SeasonDao seasonDao;
