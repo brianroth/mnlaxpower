@@ -75,6 +75,7 @@ public class CacheControllerTest {
         List<Team> teams = new ArrayList<>();
 
         when(seasonDao.findById(OptionsFilter.DEFAULT_SEASON_ID)).thenReturn(season);
+        when(divisionDao.findById(division.getId())).thenReturn(division);
         when(teamDao.findAllByDivision(division.getId())).thenReturn(teams);
 
         Result result = controller.recalculate();
