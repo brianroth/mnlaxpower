@@ -1,0 +1,8 @@
+<tr>
+  <td><%= format(game.date) %></td>
+  <td><%= game.location %></td>
+  <td><%= link_to opponent(@team, game).name, team_path(opponent(@team, game)) %> </td>
+  <td>0.23</td>
+  <td><%= goals_for(@team, game) %></td>
+  <td><%= goals_against(@team, game) %></td>
+</tr>
