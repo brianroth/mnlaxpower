@@ -14,10 +14,11 @@
 ActiveRecord::Schema.define(version: 20160512220915) do
 
   create_table "divisions", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.integer  "season_id",  null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",                       null: false
+    t.integer  "season_id",                  null: false
+    t.boolean  "default",    default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "games", force: :cascade do |t|
@@ -32,9 +33,10 @@ ActiveRecord::Schema.define(version: 20160512220915) do
   end
 
   create_table "seasons", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",                       null: false
+    t.boolean  "default",    default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "teams", force: :cascade do |t|

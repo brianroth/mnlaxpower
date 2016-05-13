@@ -3,7 +3,7 @@ class DivisionsController < ApplicationController
     if params[:id]
       @division = Division.find_by_id(params[:id])
     else
-      @division = Division.first
+      @division = Division.default.first
     end
 
     if @division

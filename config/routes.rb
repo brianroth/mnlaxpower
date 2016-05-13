@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'seasons/:id' => 'seasons#show', as: :season
   get 'divisions/:id' => 'divisions#show', as: :division
   get 'teams/:id' => 'teams#show', as: :team
 
@@ -7,6 +8,8 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'divisions#show'
+
+  get '/faq', to: 'application#faq'
 
   get '*unmatched_route', to: 'application#render_404'
   

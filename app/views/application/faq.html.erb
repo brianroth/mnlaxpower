@@ -1,0 +1,70 @@
+<h4>Frequently Asked Questions</h4>
+<dl>
+  <dt>What does RPI mean?</dt>
+  <dd><p>RPI (Ratings Percentage Index) is a formula used to rank teams. Traditionally, it has been defined as follows: 
+<blockquote>
+RPI = 0.25 * WP + 0.50 * OWP + 0.25 * OOWP
+</blockquote>
+
+<p>
+Here is an example schedule for 4 teams named A, B, C, D: 
+<table class="table table-bordered table-condensed" style="width:50%">
+    <tr>
+      <th></th><th>A</th><th>B</th><th>C</th><td>D</th>
+    </tr>
+    <tr>
+      <th>A</th>
+      <td>.</td>
+      <td>1</td>
+      <td>1</td>
+      <td>.</td>
+    </tr>
+    <tr>
+      <th>B</th>
+      <td>0</td>
+      <td>.</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>C</th>
+      <td>0</td>
+      <td>1</td>
+      <td>.</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>D</th>
+      <td>.</td>
+      <td>1</td>
+      <td>0</td>
+      <td>.</td>
+    </tr>
+  </table>
+<ul>
+<li>1 = win for team in row</li>
+<li>0 = loss for team in row</li>
+<li>. = not played</li>
+</ul>
+
+Each 1 in a team's row represents a win, and each 0 represents a loss. So team C has wins against B and D, and a loss against A. Team A has wins against B and C, but has not played D. 
+</p>
+WP, OWP, and OOWP are defined for each team as follows: 
+<ul>
+<li><strong>WP</strong> (Winning Percentage) is the fraction of a teams games that they have won.</li>
+<li><strong>OWP</strong> (Opponents' Winning Percentage) is the average WP of a team's opponents, after first throwing out the games they have played against each other.  For example, if you throw out games played against team D, then team B has WP = 0 and team C has WP = 0.5. Therefore team D has OWP = 0.5 * (0 + 0.5) = 0.25. Similarly, team A has OWP = 0.5, team B has OWP = 0.5, and team C has OWP = 2/3.</li>
+<li><strong>OOWP</strong> (Opponents' Opponents' Winning Percentage) is the average OWP of a team's opponents. OWP is exactly the number computed in the previous step.  For example, team A has OOWP = 0.5 * (0.5 + 2/3) = 7/12.</li>
+</ul> 
+
+Putting it all together, team A has `RPI = (0.25 * 1) + (0.5 * 0.5) + (0.25 * 7 / 12) = 0.6458333...` </p></dd>
+  <dt>Why do ties count as a loss?</dt>
+  <dd><p>A tie isn't a win.</p></dd>
+  <dt>Why do you do this?</dt>
+  <dd><p>I wanted to learn the ninja framework and this seemed like a good use case.</p></dd>
+  <dt>How did you get this data?</dt>
+  <dd><p>I used the APIs available at <a href='http://leagueathletics.com/Help/api.shtml'>http://leagueathletics.com/Help/api.shtml</a></p></dd>
+  <dt>Where is the site hosted?</dt>
+  <dd><p>In the cloud at <a href='https://heroku.com'>Heroku</a>.</p></dd>
+  <dt>Where is the source code?</dt>
+  <dd><p>The project source is hosted at <a href='https://github.com/brianroth/mnlaxpower'>https://github.com/brianroth/mnlaxpower</a>.</p></dd>
+</dl>

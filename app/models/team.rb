@@ -1,5 +1,5 @@
 class Team < ActiveRecord::Base
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { scope: :division}
   validates :cms_code, presence: true, uniqueness: true
 
   belongs_to :division

@@ -25,10 +25,22 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span class="glyphicon glyphicon-cog"></span>BOYS U15A&nbsp;<span class="caret">&nbsp;</span>
+          <a id="drop_season" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-cog">&nbsp;<%= @season.name %>
+              <span class="glyphicon caret">&nbsp;</span>
+            </span>
           </a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" aria-labelledby="drop_season">
+            <%= render partial: "season", collection: @seasons %>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a id="drop_division" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-cog">&nbsp;<%= @division.name %>
+              <span class="glyphicon caret">&nbsp;</span>
+            </span>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="drop_division">
             <%= render partial: "division", collection: @season.divisions %>
           </ul>
         </li>
@@ -41,7 +53,6 @@
   <%= yield %>
 </div>
 <%= yield :js_postscript %>
-<script src="//netdna.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/t/bs-3.3.6/jq-2.2.0,dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/t/bs-<%= bootstrap_version %>/jq-2.2.0,dt-1.10.11,r-2.0.2/datatables.min.js"></script>
 </body>
 </html>
