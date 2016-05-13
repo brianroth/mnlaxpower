@@ -7,6 +7,7 @@ class DivisionsController < ApplicationController
     end
 
     if @division
+      @season = @division.season
       render :show
     else
       render_404

@@ -3,8 +3,8 @@
 <head>
   <%= yield :head %>
   <link href="//netdna.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" rel="stylesheet" >
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs-3.3.6/jq-2.2.0,dt-1.10.11,r-2.0.2/datatables.min.css"/>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap-theme.min.css" rel="stylesheet" >
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs-<%= bootstrap_version %>/jq-2.2.0,dt-1.10.11,r-2.0.2/datatables.min.css"/>
   <%= stylesheet_link_tag    'application', media: 'all'%>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
@@ -29,12 +29,7 @@
             <span class="glyphicon glyphicon-cog"></span>BOYS U15A&nbsp;<span class="caret">&nbsp;</span>
           </a>
           <ul class="dropdown-menu">
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="/division/21800">BOYS U11A</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="/division/17815">BOYS U11B</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="/division/18299">BOYS U13A</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="/division/18298">BOYS U13B</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="/division/18300">BOYS U15B</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="/division/17813">BOYS U9</a></li>
+            <%= render partial: "division", collection: @season.divisions %>
           </ul>
         </li>
         <li><a href="/faq">F.A.Q.</a></li>
