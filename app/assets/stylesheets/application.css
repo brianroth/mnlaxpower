@@ -13,14 +13,6 @@
  *= require_tree .
  *= require_self
  */
-body {
-   font-size: 20px;
-}
-
-.navbar-brand {
-  font-size: 24px;
-}
-
 .dropdown {
     padding-left: 1em;
 }

@@ -14,14 +14,14 @@
 </script>
 <% end %>
 <div class="table-responsive">
-  <table id="division" class="dataTable display">
+  <table id="division" class="display compact">
     <thead>
     <tr>
       <th>Name</th>
       <th class="col-sm-1">Won</th>
       <th class="col-sm-1">Played</th>
       <th class="col-sm-1">Points</th>
-      <th id="rpi" class="col-sm-1">RPI</th>
+      <th class="col-sm-1">RPI</th>
     </tr>
     </thead>
     <%= render partial: "team", collection: @division.teams %>

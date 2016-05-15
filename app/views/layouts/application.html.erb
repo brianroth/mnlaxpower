@@ -2,6 +2,7 @@
 <html>
 <head>
   <%= yield :head %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap-theme.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/dt/dt-1.10.11/datatables.min.css"/>
@@ -41,14 +42,12 @@
             <%= render partial: "division", collection: @season.divisions %>
           </ul>
         </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
         <li><a class="navbar-brand" href="/faq">F.A.Q.</a></li>
       </ul>
     </div>
   </div>
 </nav>        
-<div class="container-fluid">
+<div class="container">
   <%= yield %>
 </div>
 <%= yield :js_postscript %>
