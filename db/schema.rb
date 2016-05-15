@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20160512220915) do
   create_table "divisions", force: :cascade do |t|
     t.string   "name",                       null: false
     t.integer  "season_id",                  null: false
+    t.integer  "cms_code",                   null: false
     t.boolean  "default",    default: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
@@ -35,6 +36,7 @@ ActiveRecord::Schema.define(version: 20160512220915) do
   create_table "seasons", force: :cascade do |t|
     t.string   "name",                       null: false
     t.boolean  "default",    default: false
+    t.integer  "cms_code",                   null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end

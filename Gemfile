@@ -7,6 +7,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'puma'
 gem 'sidekiq'
+gem 'rest-client'
 
 group :production do
   gem 'rails_12factor'

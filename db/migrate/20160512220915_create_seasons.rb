@@ -3,6 +3,7 @@ class CreateSeasons < ActiveRecord::Migration
     create_table :seasons do |t|
       t.string :name, null: false
       t.boolean :default, default: false
+      t.integer :cms_code, null: false
       t.timestamps null: false
     end
   end

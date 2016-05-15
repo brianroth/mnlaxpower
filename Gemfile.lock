@@ -109,6 +109,8 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (11.1.2)
     redis (3.3.0)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
     rspec-core (3.4.4)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
@@ -165,6 +167,7 @@ DEPENDENCIES
   puma
   rails (= 4.2.6)
   rails_12factor
+  rest-client
   rspec-rails
   sass-rails (~> 5.0)
   sidekiq

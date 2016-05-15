@@ -2,16 +2,18 @@ require 'rails_helper'
 require 'shared_examples_for_models'
 
 describe Team do
-  let(:name) {'Eagan'}
+  let(:name) { 'Eagan' }
+  let(:cms_code) { 5656 }
   let(:season) { create :season }
   let(:division) { create :division }
 
   describe '#save' do
     subject do
-      team = division.teams.create!(name: name, cms_code: 5656)
+      team = division.teams.create!(name: name, cms_code: cms_code)
     end
 
     it { is_expected.to have_attributes name: name }
+    it { is_expected.to have_attributes cms_code: cms_code }
     it_behaves_like 'a newly created model instance'
   end
 
