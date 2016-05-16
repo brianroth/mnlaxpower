@@ -1,4 +1,4 @@
-Boys LAX Relative Power Index
+LAX Relative Power Index
 ===================================
 
 Deployment
