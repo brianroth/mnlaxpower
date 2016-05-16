@@ -12,11 +12,15 @@ class UpdateDivisionWorker
     division.teams.each do |team|
 
       data.merge!('TeamID': team.cms_code)
-      response = get(data)
-      result = response['results']
-      games = result['games']
-      games.each do |game|
-        create_game(division, game)
+      
+      if response = get(data)
+        result = response['results']
+        games = result['games']
+        games.each do |game|
+          create_game(division, game)
+        end        
+      else
+        logger.error "Unable to get results for division #{division_id}"
       end
     end
   end
@@ -50,7 +54,7 @@ class UpdateDivisionWorker
     if game.errors.any?
       logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
     else
-      logger.info("Created game #{game.cms_code}: '#{away_team.name}' at #{home_team.name}'")
+      logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
     end
   end
 
