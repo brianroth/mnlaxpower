@@ -1,4 +1,5 @@
 class Game < ActiveRecord::Base
+  validates :cms_code, presence: true
   validates :location, presence: true
   validates :date, presence: true
   validates :home_team, presence: true

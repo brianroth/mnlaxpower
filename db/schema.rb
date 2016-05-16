@@ -23,12 +23,14 @@ ActiveRecord::Schema.define(version: 20160512220915) do
   end
 
   create_table "games", force: :cascade do |t|
+    t.integer  "cms_code",        null: false
     t.string   "location",        null: false
     t.datetime "date",            null: false
     t.integer  "home_team_id",    null: false
     t.integer  "home_team_score", null: false
     t.integer  "away_team_id",    null: false
     t.integer  "away_team_score", null: false
+    t.string   "commentary"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end

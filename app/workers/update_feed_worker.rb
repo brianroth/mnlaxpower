@@ -33,6 +33,12 @@ class UpdateFeedWorker
         end
       end
     end
+
+    set_defaults
+
+    season.divisions.each do |division|
+      UpdateDivisionWorker.perform_async division.id
+    end
   end
 
   def create_season(name, cms_code)
@@ -65,6 +71,16 @@ class UpdateFeedWorker
     else
       logger.info "Creating team #{cms_code} with name #{name}"
       team = division.teams.create(name: name, cms_code: cms_code)
+    end
+  end
+
+  def set_defaults
+    if season = Season.find_by_cms_code('12179')
+      season.update_attributes(default: true)
+
+      if division = season.divisions.find_by_name('BOYS U15A')
+        division.update_attributes(default: true)
+      end
     end
   end
 

@@ -17,50 +17,23 @@ class ReadDivision
 
     games = results['games']
 
-    puts games
+    games.each do |game|
+      create_game(game)
+    end
   end
-
-{
-  "id"=>611328, 
-  "assocID"=>2336, 
-  "date"=>"06-29-2006", 
-  "time"=>"06:00 PM", 
-  "ISOStart"=>"2006-06-29T23:00:00.000Z", 
-  "finish"=>"07:00 PM", 
-  "ISOFinish"=>"2006-06-30T00:00:00.000Z", 
-  "type"=>"Game", 
-  "cancelled"=>false, 
-  "facility"=>{
-    "id"=>65067, 
-    "name"=>"Centennial MS Field 9", 
-    "city"=>"Lino Lakes", "state"=>"MN"}, 
-    "home"=>{
-      "id"=>44657, 
-      "associd"=>2336, 
-      "name"=>"Lino Lakes", 
-      "score"=>4, 
-      "points"=>0, 
-      "logo"=>""
-    }, 
-    "away"=>{
-      "id"=>44664, 
-      "associd"=>2336, 
-      "name"=>"Andover Black", 
-      "score"=>4, 
-      "points"=>0, 
-      "logo"=>""
-    }, 
-    "statistics"=>false, 
-    "edited"=>"2013-05-28T21:25:00.000Z", 
-    "editedBy"=>"MM", 
-    "sent"=>nil, 
-    "hasStats"=>false, 
-    "commentary"=>""
-  }
 
   def create_game(params)
-    
+    date = params['ISOStart']
+    location = params['facility']['name']
+    home_team_cms_code = params['home']['id']
+    home_team_score = params['home']['score']
+
+    away_team_cms_code = params['away']['id']
+    away_team_score = params['away']['score'] 
+
+    puts "Creating game:\n\tdate=#{date}\n\tlocation=#{location}\n\thome[cms_code]=#{home_team_cms_code}\n\thome[score]=#{home_team_score}\n\taway[cms_code]=#{away_team_cms_code}\n\taway[score]=#{away_team_score}"
   end
+
   def get(data)
     response = RestClient.get 'https://api.leagueathletics.com/api/results', {:params => data}
     JSON.parse(response.body)

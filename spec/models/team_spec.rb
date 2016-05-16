@@ -31,11 +31,12 @@ describe Team do
 
     context 'with one home and no away games' do
       before do
-       eagan.home_games.create!(location: 'Northview',
-          away_team: eastview,
-          home_team_score: 1, 
-          away_team_score: 0,
-          date: DateTime.now)
+       eagan.home_games.create!(cms_code: 38237,
+        location: 'Northview',
+        away_team: eastview,
+        home_team_score: 1, 
+        away_team_score: 0,
+        date: DateTime.now)
       end
 
       it 'has one game' do
@@ -45,17 +46,19 @@ describe Team do
 
     context 'with one home and one away games' do
       before do
-       eagan.home_games.create!(location: 'Northview',
-          away_team: eastview,
-          home_team_score: 1, 
-          away_team_score: 0,
-          date: DateTime.now)
+       eagan.home_games.create!(cms_code: 838,
+        location: 'Northview',
+        away_team: eastview,
+        home_team_score: 1, 
+        away_team_score: 0,
+        date: DateTime.now)
 
-       eastview.home_games.create!(location: 'Blackhawk Middle School',
-          away_team: eagan,
-          home_team_score: 0, 
-          away_team_score: 1,
-          date: DateTime.now)
+       eastview.home_games.create!(cms_code: 37218,
+        location: 'Blackhawk Middle School',
+        away_team: eagan,
+        home_team_score: 0, 
+        away_team_score: 1,
+        date: DateTime.now)
       end
 
       it 'has one game' do

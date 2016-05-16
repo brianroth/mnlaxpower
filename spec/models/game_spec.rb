@@ -7,21 +7,27 @@ describe Game do
   let(:division) { create :division }
   let(:eagan) { division.teams.create(name: 'Eagan', cms_code: 1234) }
   let(:eastview) { division.teams.create(name: 'Eastview', cms_code: 4321) }
+  let(:cms_code) { 237437 }
+  let(:commentary) { 'Awesome game' }
 
   describe '#save' do
     subject do
-      team = eagan.home_games.create!(location: northview,
-          away_team: eastview,
-          home_team_score: 1, 
-          away_team_score: 0,
-          date: DateTime.now)
+      team = eagan.home_games.create!(cms_code: cms_code,
+        location: northview,
+        away_team: eastview,
+        home_team_score: 1, 
+        away_team_score: 0,
+        date: DateTime.now,
+        commentary: commentary)
     end
 
+    it { is_expected.to have_attributes cms_code: cms_code }
     it { is_expected.to have_attributes location: northview }
     it { is_expected.to have_attributes away_team: eastview }
     it { is_expected.to have_attributes home_team: eagan }
     it { is_expected.to have_attributes home_team_score: 1 }
     it { is_expected.to have_attributes away_team_score: 0 }
+    it { is_expected.to have_attributes commentary: commentary }
     it_behaves_like 'a newly created model instance'
   end
 
@@ -33,7 +39,8 @@ describe Game do
 
     context 'when validation passes' do
       let(:game) { 
-        Game.create!(location: northview,
+        Game.create!(cms_code: cms_code,
+          location: northview,
           home_team: eagan,
           away_team: eastview,
           home_team_score: 1, 
@@ -46,7 +53,8 @@ describe Game do
     context 'when validation fails' do
       context 'because location is missing' do
         let(:game) { 
-          Game.create(date: DateTime.now,
+          Game.create(cms_code: cms_code,
+            date: DateTime.now,
             home_team: eagan, 
             away_team: eastview,
             home_team_score: 1, 
@@ -61,7 +69,8 @@ describe Game do
 
       context 'because the date is missing' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             home_team: eagan, 
             away_team: eastview,
             home_team_score: 1, 
@@ -76,7 +85,8 @@ describe Game do
 
       context 'because the home team is missing' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             away_team: eastview,
             home_team_score: 1, 
             away_team_score: 0,
@@ -91,7 +101,8 @@ describe Game do
 
       context 'because the away team is missing' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             home_team: eagan,
             home_team_score: 1, 
             away_team_score: 0,
@@ -106,7 +117,8 @@ describe Game do
 
       context 'because the home team score is missing' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             home_team: eagan,
             away_team: eastview,
             away_team_score: 0,
@@ -121,7 +133,8 @@ describe Game do
 
       context 'because the home team score is less than zero' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             home_team: eagan,
             away_team: eastview,
             home_team_score: -1, 
@@ -137,7 +150,8 @@ describe Game do
 
       context 'because the home team score is not a whole number' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             home_team: eagan,
             away_team: eastview,
             home_team_score: 1.1, 
@@ -153,7 +167,8 @@ describe Game do
 
       context 'because the away team score is missing' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             home_team: eagan,
             away_team: eastview,
             home_team_score: 1, 
@@ -168,7 +183,8 @@ describe Game do
 
       context 'because the away team score is less than zero' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             home_team: eagan,
             away_team: eastview,
             home_team_score: 1, 
@@ -184,7 +200,8 @@ describe Game do
 
       context 'because the away team score is not a whole number' do
         let(:game) { 
-          Game.create(location: northview,
+          Game.create(cms_code: cms_code,
+            location: northview,
             home_team: eagan,
             away_team: eastview,
             home_team_score: 1, 
