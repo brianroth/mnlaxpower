@@ -8,18 +8,15 @@ class UpdateDivisionWorker
     }
 
     division = Division.find_by_id(division_id)
-
     division.teams.each do |team|
-
-      data.merge!('TeamID': team.cms_code)
-      
-      if response = get(data)
+      begin
+        response = get(data.merge('TeamID': team.cms_code))
         result = response['results']
         games = result['games']
         games.each do |game|
           create_game(division, game)
-        end        
-      else
+        end
+      rescue NoMethodError => e
         logger.error "Unable to get results for division #{division_id}"
       end
     end
