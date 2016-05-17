@@ -1,4 +1,6 @@
 class TeamsController < ApplicationController
+  caches_page :show
+
   def show
     if @team = Team.find_by_id(params[:id])
       @division = @team.division

@@ -1,4 +1,3 @@
-
 class UpdateFeedWorker
   include Sidekiq::Worker
   def perform(season_id)

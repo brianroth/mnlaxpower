@@ -36,7 +36,8 @@ describe Team do
         away_team: eastview,
         home_team_score: 1, 
         away_team_score: 0,
-        date: DateTime.now)
+        date: '06-25-2015',
+        time: '07:15 PM')
       end
 
       it 'has one game' do
@@ -51,14 +52,16 @@ describe Team do
         away_team: eastview,
         home_team_score: 1, 
         away_team_score: 0,
-        date: DateTime.now)
+        date: '06-25-2015',
+        time: '07:15 PM')
 
        eastview.home_games.create!(cms_code: 37218,
         location: 'Blackhawk Middle School',
         away_team: eagan,
         home_team_score: 0, 
         away_team_score: 1,
-        date: DateTime.now)
+        date: '06-25-2015',
+        time: '07:15 PM')
       end
 
       it 'has one game' do

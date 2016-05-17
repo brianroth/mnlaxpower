@@ -1,4 +1,6 @@
 class DivisionsController < ApplicationController
+  caches_page :show
+
   def show
     if params[:id]
       @division = Division.find_by_id(params[:id])

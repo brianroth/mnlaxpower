@@ -1,8 +1,4 @@
 module ApplicationHelper
-  def format(date)
-    date.strftime('%F')
-  end
-
   def opponent(team, game)
     if game.home_team.id == team.id
       game.away_team
