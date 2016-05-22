@@ -74,7 +74,7 @@ class UpdateFeedWorker
   end
 
   def set_defaults
-    if season = Season.find_by_cms_code('12179')
+    if season = Season.find_by_cms_code('13414')
       season.update_attributes(default: true)
 
       if division = season.divisions.find_by_name('BOYS U15A')
