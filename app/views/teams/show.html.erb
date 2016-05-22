@@ -35,4 +35,8 @@
     </tbody>
   </table>
 </div>
-<a href='http://leag1.com/Results.asp?MyTeam=<%=@team.cms_code%>&org=youthlaxmn.org'>YLM site for <%= @team.name %></a>
+<div class="footer" id="footer">
+  <p><a href='http://leag1.com/Results.asp?MyTeam=<%=@team.cms_code%>&org=youthlaxmn.org'>YLM site for <%= @team.name %></a></p>
+  <p><%= display_datetime(@team.updated_at) %></p>  
+</div>
+

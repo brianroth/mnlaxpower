@@ -22,4 +22,8 @@ module ApplicationHelper
       game.home_team_score
     end
   end
+
+  def display_datetime(datetime)
+    datetime.in_time_zone("America/Chicago").strftime("Last updated %A, %b %d %Y %H:%M:%S %p")
+  end
 end

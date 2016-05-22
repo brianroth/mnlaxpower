@@ -27,3 +27,6 @@
     <%= render partial: "team", collection: @division.teams %>
   </table>
 </div>
+<div class="footer" id="footer">
+  <p><%= display_datetime(@division.updated_at) %></p>  
+</div>

@@ -16,3 +16,7 @@
 .dropdown {
     padding-left: 1em;
 }
+
+div.footer p {
+  margin: 1em 0 0;
+}
