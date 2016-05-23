@@ -34,9 +34,10 @@ class UpdateDivisionWorker
       division.teams.each do |team|
         wp = wp(team)
         owp = owp(team)
-        oowp = oowp(team)
-        rpi = 0.25 * wp + 0.5 * owp + 0.25 * oowp
-        logger.info "#{team.name} rpi=#{rpi.round(3)} wp=#{wp.round(3)} owp=#{owp.round(3)} oowp=#{oowp.round(3)}"
+        # oowp = oowp(team)
+        # rpi = 0.25 * wp + 0.5 * owp + 0.25 * oowp
+        rpi = 0.34 * wp + 0.66 * owp
+        logger.info "#{team.name} rpi=#{rpi.round(3)} wp=#{wp.round(3)} owp=#{owp.round(3)}"
         team.update_attributes(rpi: rpi, updated_at: Time.now)
       end
     end
