@@ -135,7 +135,7 @@ class UpdateDivisionWorker
       end
 
       opponent.games.each do |opponent_game|
-        opponent_opponent = if game.home_team = opponent_game
+        opponent_opponent = if game.home_team = opponent
           game.away_team
         else
           game.home_team
