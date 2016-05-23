@@ -45,15 +45,16 @@ ActiveRecord::Schema.define(version: 20160512220915) do
   end
 
   create_table "teams", force: :cascade do |t|
-    t.string   "name",                         null: false
-    t.integer  "cms_code",                     null: false
+    t.string   "name",                           null: false
+    t.integer  "cms_code",                       null: false
     t.integer  "wins",             default: 0
     t.integer  "ties",             default: 0
     t.integer  "home_games_count", default: 0
     t.integer  "away_games_count", default: 0
-    t.integer  "division_id",                  null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.float    "rpi",              default: 0.0
+    t.integer  "division_id",                    null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
 end

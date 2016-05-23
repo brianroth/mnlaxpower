@@ -21,16 +21,24 @@ class UpdateDivisionWorker
           wins = Game.where("(home_team_id = ? and home_team_score > away_team_score) or (away_team_id = ? and away_team_score > home_team_score)", team.id, team.id).count
           ties = Game.where("(home_team_id = ? or away_team_id = ?) and home_team_score = away_team_score", team.id, team.id)
 
-          team.update_attributes(wins: wins, ties: ties, home_games_count: team.home_games.count, away_games_count: team.away_games.count)
+          team.update_attributes(wins: wins, 
+            ties: ties,
+            home_games_count: team.home_games.count, 
+            away_games_count: team.away_games.count,
+            updated_at: Time.now)
         rescue NoMethodError => e
           logger.error "Unable to get results for division #{division_id}"
         end
-        
-        FileUtils.rm_rf("#{Rails.root.to_s}/public/teams/#{team.id}.html")
       end
 
-      FileUtils.rm_rf("#{Rails.root.to_s}/public/divisions/#{division.id}.html")
-      FileUtils.rm_rf("#{Rails.root.to_s}/public/index.html")
+      division.teams.each do |team|
+        wp = wp(team)
+        owp = owp(team)
+        oowp = oowp(team)
+        rpi = 0.25 * wp + 0.5 * owp + 0.25 * oowp
+        logger.info "#{team.name} rpi=#{rpi.round(3)} wp=#{wp.round(3)} owp=#{owp.round(3)} oowp=#{oowp.round(3)}"
+        team.update_attributes(rpi: rpi, updated_at: Time.now)
+      end
     end
   end
 
@@ -64,6 +72,91 @@ class UpdateDivisionWorker
       logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
     else
       logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
+    end
+  end
+
+  def wp(team)
+    games_played = 0
+    games_won = 0
+
+    team.games.each do |game|
+      # Ignore games with no score, they never happened
+      if ((game.home_team_score + game.away_team_score) > 0)
+        games_played += 1
+        games_won += 1 if game.winner?(team)
+      end
+    end
+
+    if games_played == 0
+      0
+    else
+      (1.0 * games_won) / games_played
+    end
+  end
+
+  def owp(team)
+    games_played = 0
+    games_won = 0
+
+    team.games.each do |game|
+      opponent = if game.home_team = team
+        game.away_team
+      else
+        game.home_team
+      end
+
+      opponent.games.each do |opponent_game|
+        if (opponent_game.home_team != team) && (opponent_game.away_team != team)
+          # Ignore games with no score, they never happened
+          if ((opponent_game.home_team_score + opponent_game.away_team_score) > 0)
+            games_played += 1
+            games_won += 1 if opponent_game.winner?(opponent)
+          end
+        end
+      end
+    end
+
+    if games_played == 0
+      0
+    else
+      (1.0 * games_won) / games_played
+    end
+  end
+
+  def oowp(team)
+    games_played = 0
+    games_won = 0
+
+    team.games.each do |game|
+      opponent = if game.home_team = team
+        game.away_team
+      else
+        game.home_team
+      end
+
+      opponent.games.each do |opponent_game|
+        opponent_opponent = if game.home_team = opponent_game
+          game.away_team
+        else
+          game.home_team
+        end
+
+        opponent_opponent.games.each do |opponent_opponent_game|
+          if (opponent_opponent_game.home_team != opponent_opponent) && (opponent_opponent_game.away_team != opponent_opponent)
+            # Ignore games with no score, they never happened
+            if ((opponent_opponent_game.home_team_score + opponent_opponent_game.away_team_score) > 0)
+              games_played += 1
+              games_won += 1 if opponent_opponent_game.winner?(opponent_opponent)
+            end
+          end
+        end
+      end
+    end
+
+    if games_played == 0
+      0
+    else
+      (1.0 * games_won) / games_played
     end
   end
 

@@ -8,7 +8,6 @@ gem 'jquery-rails'
 gem 'puma'
 gem 'sidekiq'
 gem 'rest-client'
-gem 'actionpack-page_caching'
 
 group :production do
   gem 'rails_12factor'

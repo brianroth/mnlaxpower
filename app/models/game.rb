@@ -12,4 +12,9 @@ class Game < ActiveRecord::Base
   belongs_to :away_team, :class_name => 'Team', :foreign_key => 'away_team_id'
 
   default_scope { order('date ASC') }
+
+  def winner?(team)
+    ((home_team == team) && (home_team_score > away_team_score)) ||
+    ((away_team == team) && (away_team_score > home_team_score))
+  end
 end

@@ -43,7 +43,7 @@ class UpdateFeedWorker
   def create_season(name, cms_code)
     if season = Season.find_by_cms_code(cms_code)
       logger.info "Updating season #{cms_code} with name #{name}"
-      season.update_attributes(name: name)
+      season.update_attributes(name: name, updated_at: Time.now)
       season
     else
       logger.info "Creating season #{cms_code} with name #{name}"
@@ -54,7 +54,7 @@ class UpdateFeedWorker
   def create_division(season, name, cms_code)
     if division = season.divisions.find_by_cms_code(cms_code)
       logger.info "Updating division #{cms_code} with name #{name}"
-      division.update_attributes(name: name)
+      division.update_attributes(name: name, updated_at: Time.now)
       division
     else
       logger.info "Creating division #{cms_code} with name #{name}"
@@ -65,7 +65,7 @@ class UpdateFeedWorker
   def create_team(division, name, cms_code)
     if team = division.teams.find_by_cms_code(cms_code)
       logger.info "Updating team #{cms_code} with name #{name}"
-      team.update_attributes(name: name)
+      team.update_attributes(name: name, updated_at: Time.now)
       team
     else
       logger.info "Creating team #{cms_code} with name #{name}"

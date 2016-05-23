@@ -17,8 +17,4 @@ class Team < ActiveRecord::Base
   def points
     3*wins.to_i + ties.to_i
   end
-
-  def rpi
-    
-  end
 end
