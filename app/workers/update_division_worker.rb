@@ -27,7 +27,7 @@ class UpdateDivisionWorker
             away_games_count: team.away_games.count,
             updated_at: Time.now)
         rescue NoMethodError => e
-          logger.error "Unable to get results for division #{division_id}"
+          logger.error "Unable to get results for team #{team.cms_code}"
         end
       end
 
