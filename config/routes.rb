@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get 'seasons/:id' => 'seasons#show', as: :season
   get 'divisions/:id' => 'divisions#show', as: :division
   get 'teams/:id' => 'teams#show', as: :team
+  get 'organizations' => 'organizations#show', as: :organization
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
