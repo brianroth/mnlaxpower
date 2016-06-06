@@ -1,0 +1,29 @@
+<% content_for :head do %>
+  <title>LAX Relative Power Index</title>
+<% end %>
+<% content_for :js_postscript do %>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    $('#organizations').dataTable({
+        paging:   false,
+        info: false,
+        searching: false,
+        "order": [[ 0, "asc" ]]
+    } );
+  } );
+</script>
+<% end %>
+<div class="table-responsive">
+  <table id="organizations" class="display compact">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th class="col-sm-1">Teams</th>
+      <th class="col-sm-1">Games</th>
+      <th class="col-sm-1">Won</th>
+      <th class="col-sm-1">Avg</th>
+    </tr>
+    </thead>
+    <%= render partial: "organization", collection: @organizations %>
+  </table>
+</div>

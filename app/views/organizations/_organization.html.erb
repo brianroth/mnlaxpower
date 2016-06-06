@@ -1,6 +1,5 @@
 <tr>
-  <td><%= organization.name %></td>
-  <td><%= organization.teams_count %></td>
+  <td><%= link_to organization.name, organization_path(organization) %></td>
   <td><%= organization.games_count %></td>
   <td><%= organization.wins %></td>
   <td><%= organization.avg %></td>
