@@ -8,7 +8,11 @@ FactoryGirl.define do
     cms_code { 95739 }
     season
   end
+  factory :organization do
+    name { 'Eagan' }
+  end
   factory :team do
+    organization
     name { 'Eagan' }
     cms_code { 1234 }
     division

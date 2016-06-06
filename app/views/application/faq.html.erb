@@ -1,3 +1,33 @@
+<% content_for :js_postscript do %>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    $('#games_played').dataTable({
+        paging:   false,
+        info: false,
+        searching: false,
+        "order": [[ 1, "desc" ]]
+    } );
+  } );
+  $(document).ready(function() {
+    $('#game_locations').dataTable({
+        paging:   false,
+        info: false,
+        searching: false,
+        "order": [[ 1, "desc" ]]
+    } );
+  } );
+  $(document).ready(function() {
+    $('#team_counts').dataTable({
+        paging:   false,
+        info: false,
+        searching: false,
+        "order": [[ 0, "desc" ]]
+    } );
+  } );
+  team_counts
+</script>
+<% end %>
+
 <h4>Frequently Asked Questions</h4>
 <dl>
   <dt>What does RPI mean?</dt>
@@ -59,12 +89,142 @@ WP, OWP, and OOWP are defined for each team as follows:
 Putting it all together, team A has `RPI = (0.25 * 1) + (0.5 * 0.5) + (0.25 * 7 / 12) = 0.6458333...` </p></dd>
   <dt>Why do ties count as a loss?</dt>
   <dd><p>A tie isn't a win.</p></dd>
-  <dt>Why do you do this?</dt>
-  <dd><p>I wanted to learn the ninja framework and this seemed like a good use case.</p></dd>
   <dt>How did you get this data?</dt>
   <dd><p>I used the APIs available at <a href='http://leagueathletics.com/Help/api.shtml'>http://leagueathletics.com/Help/api.shtml</a></p></dd>
   <dt>Where is the site hosted?</dt>
   <dd><p>In the cloud at <a href='https://heroku.com'>Heroku</a>.</p></dd>
   <dt>Where is the source code?</dt>
   <dd><p>The project source is hosted at <a href='https://github.com/brianroth/mnlaxpower'>https://github.com/brianroth/mnlaxpower</a>.</p></dd>
+  <dt>What was the largest goal differential ever?</dt>
+  <dd><p>The largest goal differential occured on Saturday, August 3 2013 when Hastings defeated Anoka-Ramsey 66-3.  This is probably a data error that should be ignored.</p><p>The second largest goal differential occured on Thursday, July 10 2008 when Mendota Heights defeated Cottage grove 26-0.</p></dd>
+  <dt><p>How many games have been played?</p></dt>
+  <dd><p>Of the 4428 games played since 2006:
+  <ul><li>The home team has won 2006 times</li>
+  <li>The away team has won 1737 times</li>
+  <li>There have been 685 tie games (or games where the score was 0-0)</li>
+  </ul></p></dd>
+  <dt><p>How many teams?</p></dt>
+  <dd><p>There have been 2299 teams.  However, 1524 never played a game.  This is most likely due to cancelled or incorrect registrations and because at the time this was written, the 2016 schedule hadn't been loaded.</p></dd>
+  <dt><p>Where have the most games been played?</p></dt>
+  <dd><p>The most common loction for games are:
+<div class="table-responsive">
+  <table id="game_locations" class="display compact">
+  <thead><tr><th>Location</th><th>Games</th></tr></thead>
+  <tr><td>Oak-Land JHS</td><td>130</td></tr>
+  <tr><td>Chan Pract Turf</td><td>107</td></tr>
+  <tr><td>Stonemill Farms</td><td>103</td></tr>
+  <tr><td>Wayzata HS Field C</td><td>85</td></tr>
+  <tr><td>Wood Park</td><td>84</td></tr>
+  <tr><td>Elm Creek Elementary</td><td>83</td></tr>
+  <tr><td>Centennial MS Track</td><td>82</td></tr>
+  <tr><td>Staring Lake</td><td>81</td></tr>
+  <tr><td>Prairie Knoll</td><td>79</td></tr>
+  <tr><td>River Crest Elem</td><td>74</td></tr>
+  <tr><td>Minnetonka HS Turf</td><td>73</td></tr>
+  </table></p></dd>
+  <dt><p>Who has played the most games?</p></dt>
+  <dd><p>
+<div class="table-responsive">
+  <table id="games_played" class="display compact">
+  <thead><tr><th>Games Played</th><th>Games Won</th><th>Association</th></tr></thead>
+<tr><td>19</td><td> 4</td><td> Forest</td></tr>
+<tr><td>22</td><td> 1</td><td> Hopkins</td></tr>
+<tr><td>27</td><td> 12</td><td> Rogers</td></tr>
+<tr><td>31</td><td> 8</td><td> Westonka</td></tr>
+<tr><td>33</td><td> 7</td><td> Rochester</td></tr>
+<tr><td>37</td><td> 13</td><td> St.Michael Albertville</td></tr> 
+<tr><td>38</td><td> 10</td><td> Roseville</td></tr>
+<tr><td>47</td><td> 17</td><td> Waconia</td></tr>
+<tr><td>51</td><td> 1</td><td> Northfield</td></tr>
+<tr><td>51</td><td> 12</td><td> Inver Grove Heights</td></tr>
+<tr><td>52</td><td> 14</td><td> ACYLA</td></tr>
+<tr><td>74</td><td> 24</td><td> Chisago</td></tr>
+<tr><td>75</td><td> 20</td><td> Anoka</td></tr>
+<tr><td>76</td><td> 4</td><td> Farmington</td></tr>
+<tr><td>83</td><td> 50</td><td> Hastings</td></tr>
+<tr><td>90</td><td> 16</td><td> Blaine</td></tr>
+<tr><td>95</td><td> 30</td><td> Eastview</td></tr>
+<tr><td>98</td><td> 46</td><td> Orono</td></tr>
+<tr><td>99</td><td> 39</td><td> Shakopee</td></tr>
+<tr><td>102</td><td> 38</td><td> Mendota Heights</td></tr>
+<tr><td>103</td><td> 17</td><td> Minneapolis</td></tr>
+<tr><td>111</td><td> 46</td><td> Elk River</td></tr>
+<tr><td>113</td><td> 17</td><td> Moundsview</td></tr>
+<tr><td>149</td><td> 80</td><td> Oakdale</td></tr>
+<tr><td>153</td><td> 48</td><td> Cottage</td></tr>
+<tr><td>155</td><td> 56</td><td> Chaska</td></tr>
+<tr><td>159</td><td> 86</td><td> Chanhassen</td></tr>
+<tr><td>168</td><td> 88</td><td> Apple</td></tr>
+<tr><td>179</td><td> 83</td><td> Burnsville</td></tr>
+<tr><td>195</td><td> 92</td><td> Rosemount</td></tr>
+<tr><td>198</td><td> 81</td><td> Edina</td></tr>
+<tr><td>209</td><td> 121</td><td> Eagan</td></tr>
+<tr><td>214</td><td> 73</td><td> Hudson</td></tr>
+<tr><td>215</td><td> 108</td><td> Minnetonka</td></tr>
+<tr><td>219</td><td> 113</td><td> Centennial</td></tr>
+<tr><td>224</td><td> 93</td><td> Maple Grove</td></tr>
+<tr><td>238</td><td> 129</td><td> Lakeville</td></tr>
+<tr><td>239</td><td> 119</td><td> Bloomington</td></tr>
+<tr><td>256</td><td> 103</td><td> Wayzata</td></tr>
+<tr><td>302</td><td> 139</td><td> Eden Prarie</td></tr>
+<tr><td>304</td><td> 142</td><td> Prior Lake</td></tr>
+<tr><td>316</td><td> 155</td><td> Mahtomedi</td></tr>
+<tr><td>328</td><td> 166</td><td> White Bear Lake</td></tr>
+<tr><td>433</td><td> 160</td><td> Woodbury</td></tr>
+<tr><td>437</td><td> 224</td><td> Stillwater</td></tr>
+<tr><td>450</td><td> 158</td><td> Andover</td></tr>
+</table>
+</div></p></dd>
+  <dt><p>Who has had the most teams?</p></dt>
+  <dd><p>
+  <div class="table-responsive">
+  <table id="team_counts" class="display compact">
+  <thead><tr><th>Teams</th><th>Association</th></tr></thead>
+<tr><td>9</td><td>  Westonka</td></tr>
+<tr><td>10</td><td> Rochester</td></tr>
+<tr><td>12</td><td> Northfield</td></tr>
+<tr><td>12</td><td> St.Michael Albertville</td></tr>
+<tr><td>15</td><td> Forest</td></tr>
+<tr><td>15</td><td> Hopkins</td></tr>
+<tr><td>17</td><td> Moundsview</td></tr>
+<tr><td>19</td><td> Inver Grove Heights</td></tr>
+<tr><td>20</td><td> Mendota</td></tr>
+<tr><td>22</td><td> ACYLA</td></tr>
+<tr><td>22</td><td> Chisago</td></tr>
+<tr><td>22</td><td> Roseville</td></tr>
+<tr><td>23</td><td> Rogers</td></tr>
+<tr><td>25</td><td> Anoka</td></tr>
+<tr><td>26</td><td> Waconia</td></tr>
+<tr><td>29</td><td> Shakopee</td></tr>
+<tr><td>31</td><td> Elk River</td></tr>
+<tr><td>31</td><td> Hastings</td></tr>
+<tr><td>32</td><td> Blaine</td></tr>
+<tr><td>32</td><td> Cottage</td></tr>
+<tr><td>36</td><td> Farmington</td></tr>
+<tr><td>36</td><td> Oakdale</td></tr>
+<tr><td>38</td><td> Orono</td></tr>
+<tr><td>39</td><td> Apple Valley</td></tr>
+<tr><td>40</td><td> Minneapolis</td></tr>
+<tr><td>43</td><td> Eastview</td></tr>
+<tr><td>47</td><td> Burnsville</td></tr>
+<tr><td>47</td><td> Chaska</td></tr>
+<tr><td>49</td><td> Chanhassen</td></tr>
+<tr><td>50</td><td> Hudson</td></tr>
+<tr><td>53</td><td> Maple Grove</td></tr>
+<tr><td>60</td><td> White Bear Lake</td></tr>
+<tr><td>61</td><td> Centennial</td></tr>
+<tr><td>63</td><td> Mahtomedi</td></tr>
+<tr><td>69</td><td> Bloomington</td></tr>
+<tr><td>69</td><td> Rosemount</td></tr>
+<tr><td>72</td><td> Andover</td></tr>
+<tr><td>73</td><td> Eagan</td></tr>
+<tr><td>77</td><td> Wayzata</td></tr>
+<tr><td>80</td><td> Edina</td></tr>
+<tr><td>82</td><td> Stillwater</td></tr>
+<tr><td>84</td><td> Eden Prarie</td></tr>
+<tr><td>88</td><td> Lakeville</td></tr>
+<tr><td>90</td><td> Minnetonka</td></tr>
+<tr><td>91</td><td> Woodbury</td></tr>
+<tr><td>103</td><td> Prior Lake</td></tr>
+</table></div></p></dd>
 </dl>
