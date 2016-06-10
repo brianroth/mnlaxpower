@@ -20,7 +20,7 @@ class UpdateDivisionWorker
 
           wins = Game.where("(home_team_id = ? and home_team_score > away_team_score) or (away_team_id = ? and away_team_score > home_team_score)", team.id, team.id).count
           losses = Game.where("(home_team_id = ? and home_team_score < away_team_score) or (away_team_id = ? and away_team_score < home_team_score)", team.id, team.id).count
-          ties = Game.where("(home_team_id = ? or away_team_id = ?) and home_team_score = away_team_score", team.id, team.id)
+          ties = Game.where("(home_team_id = ? or away_team_id = ?) and home_team_score = away_team_score and home_team_score != 0", team.id, team.id).count
 
           team.update_attributes(wins: wins, 
             ties: ties,
