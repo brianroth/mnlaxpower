@@ -56,7 +56,6 @@ describe Game do
       context 'because location is missing' do
         let(:game) { 
           Game.create(cms_code: cms_code,
-            date: DateTime.now,
             home_team: eagan, 
             away_team: eastview,
             home_team_score: 1, 

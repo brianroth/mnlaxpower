@@ -18,6 +18,10 @@
   <li class="active"><%= @team.name %></li>
 </ol>
 
+<div class="well well-lg">Association: <%= link_to @team.organization.name, organization_path(@team.organization) %></div>
+
+<div class="well well-lg"><%=@season.name %> Record: <%=@team.wins%>-<%=@team.losses%>-<%=@team.ties%></div>
+
 <div class="table-responsive">
   <table id="team" class="display compact">
     <thead>

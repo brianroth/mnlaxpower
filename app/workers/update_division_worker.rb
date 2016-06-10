@@ -34,10 +34,10 @@ class UpdateDivisionWorker
       end
 
       division.teams.each do |team|
-        wp = wp(team)
-        owp = owp(team)
-        oowp = oowp(team)
-        rpi = 0.25 * wp + 0.5 * owp + 0.25 * oowp
+        wp = team.wp
+        owp = team.owp
+        oowp = team.oowp
+        rpi = 0.25 * team.wp + 0.5 * team.owp + 0.25 * team.oowp
         logger.info "#{team.name} rpi=#{rpi.round(3)} wp=#{wp.round(3)} owp=#{owp.round(3)}"
         team.update_attributes(rpi: rpi, updated_at: Time.now)
       end
@@ -74,71 +74,6 @@ class UpdateDivisionWorker
       logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
     else
       logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
-    end
-  end
-
-  def wp(team)
-    games_played = team.wins + team.losses + team.ties
-    games_won = team.wins
-
-    if games_played == 0
-      0
-    else
-      (1.0 * games_won) / games_played
-    end
-  end
-
-  def owp(team)
-    games_played = 0
-    games_won = 0
-
-    team.games.played.each do |game|
-      opponent = if game.home_team == team
-        game.away_team
-      else
-        game.home_team
-      end
-
-      games_played += (opponent.wins + opponent.losses + opponent.ties)
-      games_won += opponent.wins
-    end
-
-    if games_played == 0
-      0
-    else
-      (1.0 * games_won) / games_played
-    end
-  end
-
-  def oowp(team)
-    games_played = 0
-    games_won = 0
-
-    team.games.played.each do |game|
-      opponent = if game.home_team == team
-        game.away_team
-      else
-        game.home_team
-      end
-
-      opponent.games.played.each do |opponent_game|
-        opponent_opponent = if game.home_team == opponent
-          game.away_team
-        else
-          game.home_team
-        end
-      
-        if opponent_opponent != team
-          games_played += (opponent_opponent.wins + opponent_opponent.losses + opponent_opponent.ties)
-          games_won += opponent_opponent.wins
-        end
-      end
-    end
-
-    if games_played == 0
-      0
-    else
-      (1.0 * games_won) / games_played
     end
   end
 
