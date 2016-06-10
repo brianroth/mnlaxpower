@@ -128,8 +128,10 @@ class UpdateDivisionWorker
           game.home_team
         end
       
-        games_played += (opponent_opponent.wins + opponent_opponent.losses + opponent_opponent.ties)
-        games_won += opponent_opponent.wins
+        if opponent_opponent != team
+          games_played += (opponent_opponent.wins + opponent_opponent.losses + opponent_opponent.ties)
+          games_won += opponent_opponent.wins
+        end
       end
     end
 
