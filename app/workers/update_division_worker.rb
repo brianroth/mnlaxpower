@@ -78,16 +78,8 @@ class UpdateDivisionWorker
   end
 
   def wp(team)
-    games_played = 0
-    games_won = 0
-
-    team.games.each do |game|
-      # Ignore games with no score, they never happened
-      if ((game.home_team_score + game.away_team_score) > 0)
-        games_played += 1
-        games_won += 1 if game.winner?(team)
-      end
-    end
+    games_played = team.wins + team.losses + team.ties
+    games_won = team.wins
 
     if games_played == 0
       0
@@ -107,13 +99,8 @@ class UpdateDivisionWorker
         game.home_team
       end
 
-      opponent.games.each do |opponent_game|
-        # Ignore games with no score, they never happened
-        if ((opponent_game.home_team_score + opponent_game.away_team_score) > 0)
-          games_played += 1
-          games_won += 1 if opponent_game.winner?(opponent)
-        end
-      end
+      games_played += (opponent.wins + opponent.losses + opponent.ties)
+      games_won += opponent.wins
     end
 
     if games_played == 0
@@ -140,14 +127,9 @@ class UpdateDivisionWorker
         else
           game.home_team
         end
-
-        opponent_opponent.games.each do |opponent_opponent_game|
-          # Ignore games with no score, they never happened
-          if ((opponent_opponent_game.home_team_score + opponent_opponent_game.away_team_score) > 0)
-            games_played += 1
-            games_won += 1 if opponent_opponent_game.winner?(opponent_opponent)
-          end
-        end
+      
+        games_played += (opponent_opponent.wins + opponent_opponent.losses + opponent_opponent.ties)
+        games_won += opponent_opponent.wins
       end
     end
 
