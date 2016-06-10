@@ -19,10 +19,12 @@ class UpdateDivisionWorker
           end
 
           wins = Game.where("(home_team_id = ? and home_team_score > away_team_score) or (away_team_id = ? and away_team_score > home_team_score)", team.id, team.id).count
+          losses = Game.where("(home_team_id = ? and home_team_score < away_team_score) or (away_team_id = ? and away_team_score < home_team_score)", team.id, team.id).count
           ties = Game.where("(home_team_id = ? or away_team_id = ?) and home_team_score = away_team_score", team.id, team.id)
 
           team.update_attributes(wins: wins, 
             ties: ties,
+            losses: losses,
             home_games_count: team.home_games.count, 
             away_games_count: team.away_games.count,
             updated_at: Time.now)
@@ -34,9 +36,8 @@ class UpdateDivisionWorker
       division.teams.each do |team|
         wp = wp(team)
         owp = owp(team)
-        # oowp = oowp(team)
-        # rpi = 0.25 * wp + 0.5 * owp + 0.25 * oowp
-        rpi = 0.34 * wp + 0.66 * owp
+        oowp = oowp(team)
+        rpi = 0.25 * wp + 0.5 * owp + 0.25 * oowp
         logger.info "#{team.name} rpi=#{rpi.round(3)} wp=#{wp.round(3)} owp=#{owp.round(3)}"
         team.update_attributes(rpi: rpi, updated_at: Time.now)
       end
@@ -107,12 +108,10 @@ class UpdateDivisionWorker
       end
 
       opponent.games.each do |opponent_game|
-        if (opponent_game.home_team != team) && (opponent_game.away_team != team)
-          # Ignore games with no score, they never happened
-          if ((opponent_game.home_team_score + opponent_game.away_team_score) > 0)
-            games_played += 1
-            games_won += 1 if opponent_game.winner?(opponent)
-          end
+        # Ignore games with no score, they never happened
+        if ((opponent_game.home_team_score + opponent_game.away_team_score) > 0)
+          games_played += 1
+          games_won += 1 if opponent_game.winner?(opponent)
         end
       end
     end
@@ -143,12 +142,10 @@ class UpdateDivisionWorker
         end
 
         opponent_opponent.games.each do |opponent_opponent_game|
-          if (opponent_opponent_game.home_team != opponent_opponent) && (opponent_opponent_game.away_team != opponent_opponent)
-            # Ignore games with no score, they never happened
-            if ((opponent_opponent_game.home_team_score + opponent_opponent_game.away_team_score) > 0)
-              games_played += 1
-              games_won += 1 if opponent_opponent_game.winner?(opponent_opponent)
-            end
+          # Ignore games with no score, they never happened
+          if ((opponent_opponent_game.home_team_score + opponent_opponent_game.away_team_score) > 0)
+            games_played += 1
+            games_won += 1 if opponent_opponent_game.winner?(opponent_opponent)
           end
         end
       end
