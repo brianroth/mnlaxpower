@@ -13,6 +13,8 @@ class Game < ActiveRecord::Base
 
   default_scope { order('date ASC') }
 
+  scope :played, -> { where('home_team_score > 0 or away_team_score > 0') }
+
   def winner?(team)
     ((home_team == team) && (home_team_score > away_team_score)) ||
     ((away_team == team) && (away_team_score > home_team_score))

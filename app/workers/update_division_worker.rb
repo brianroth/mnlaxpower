@@ -92,7 +92,7 @@ class UpdateDivisionWorker
     games_played = 0
     games_won = 0
 
-    team.games.each do |game|
+    team.games.played.each do |game|
       opponent = if game.home_team = team
         game.away_team
       else
@@ -114,14 +114,14 @@ class UpdateDivisionWorker
     games_played = 0
     games_won = 0
 
-    team.games.each do |game|
+    team.games.played.each do |game|
       opponent = if game.home_team = team
         game.away_team
       else
         game.home_team
       end
 
-      opponent.games.each do |opponent_game|
+      opponent.games.played.each do |opponent_game|
         opponent_opponent = if game.home_team = opponent
           game.away_team
         else
