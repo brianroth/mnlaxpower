@@ -99,13 +99,9 @@ class UpdateDivisionWorker
         game.home_team
       end
 
-      puts "opponent = #{opponent.name}"
       games_played += (opponent.wins + opponent.losses + opponent.ties)
       games_won += opponent.wins
     end
-
-    puts "games_played = #{games_played}"
-    puts "games_won = #{games_won}"
 
     if games_played == 0
       0
