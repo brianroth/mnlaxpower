@@ -2,9 +2,14 @@
 <html>
 <head>
   <%= yield :head %>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--<base target="_self">--><base href="." target="_self">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap-theme.min.css">
+  <link rel="shortcut icon" href="http://www.codeply.com/images/cp_ico.png">
+
+  <!--stylesheets / link tags loaded here-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/dt/dt-1.10.11/datatables.min.css"/>
  
   <%= stylesheet_link_tag    'application', media: 'all'%>
@@ -13,45 +18,49 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-static-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">LAX Relative Power Index</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li class="dropdown">
+  <nav class="navbar navbar-fixed-top navbar-dark bg-primary">
+    <button class="navbar-toggler hidden-sm-up pull-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+        ☰
+    </button>
+    <a class="navbar-brand" href="/">LAX Relative Power Index</a>
+    <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
+        <ul class="nav navbar-nav pull-right">
+            <li class="dropdown nav-item active">
           <a id="drop_season" href="#" class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            </span><%= @season.name %><span class="caret"></span>
+            <%= @season.name %><span class="caret"></span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="drop_season">
             <%= render partial: "season", collection: @seasons %>
           </ul>
         </li>
-        <li class="dropdown">
-          <a id="drop_division" href="#" class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <li class="dropdown nav-item">
+                          <a id="drop_division" href="#" class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <%= @division.name %><span class="caret"></span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="drop_division">
-            <%= render partial: "division", collection: @season.divisions %>
+<%= render partial: "division", collection: @season.divisions %>
           </ul>
         </li>
-        <li><a class="navbar-brand" href="/faq">F.A.Q.</a></li>
-      </ul>
+            <li class="nav-item">
+                <a class="navbar-brand" href="/faq">F.A.Q.</a>
+            </li>
+        </ul>
     </div>
-  </div>
-</nav>        
+</nav>       
 <div class="container">
   <%= yield %>
 </div>
-<%= yield :js_postscript %>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/t/dt/dt-1.10.11/datatables.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $('[data-toggle=offcanvas]').click(function() {
+        $('.row-offcanvas').toggleClass('active');
+    });  
+    });
+  </script>
+<%= yield :js_postscript %>
 </body>
 </html>

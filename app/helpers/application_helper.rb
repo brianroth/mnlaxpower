@@ -24,6 +24,6 @@ module ApplicationHelper
   end
 
   def display_datetime(datetime)
-    datetime.in_time_zone("America/Chicago").strftime("Last updated %A, %b %d %Y %H:%M:%S %p")
+    datetime.in_time_zone("America/Chicago").strftime("Last updated %A, %b %d %Y %l:%M %p")
   end
 end
