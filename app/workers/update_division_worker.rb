@@ -12,25 +12,25 @@ class UpdateDivisionWorker
       division.teams.each do |team|
         begin
           response = get(data.merge('TeamID': team.cms_code))
-          result = response['results']
-          games = result['games']
+          result = response['results'] || {}
+          games = result['games'] || {}
           games.each do |game|
             create_game(division, game)
           end
-
-          wins = Game.where("(home_team_id = ? and home_team_score > away_team_score) or (away_team_id = ? and away_team_score > home_team_score)", team.id, team.id).count
-          losses = Game.where("(home_team_id = ? and home_team_score < away_team_score) or (away_team_id = ? and away_team_score < home_team_score)", team.id, team.id).count
-          ties = Game.where("(home_team_id = ? or away_team_id = ?) and home_team_score = away_team_score and home_team_score != 0", team.id, team.id).count
-
-          team.update_attributes(wins: wins, 
-            ties: ties,
-            losses: losses,
-            home_games_count: team.home_games.count, 
-            away_games_count: team.away_games.count,
-            updated_at: Time.now)
         rescue NoMethodError => e
-          logger.error "Unable to get results for team #{team.cms_code}"
+          logger.error "Unable to get results for team #{team.name}: #{e}"
         end
+
+        wins = Game.where("(home_team_id = ? and home_team_score > away_team_score) or (away_team_id = ? and away_team_score > home_team_score)", team.id, team.id).count
+        losses = Game.where("(home_team_id = ? and home_team_score < away_team_score) or (away_team_id = ? and away_team_score < home_team_score)", team.id, team.id).count
+        ties = Game.where("(home_team_id = ? or away_team_id = ?) and home_team_score = away_team_score and home_team_score != 0", team.id, team.id).count
+
+        team.update_attributes(wins: wins, 
+          ties: ties,
+          losses: losses,
+          home_games_count: team.home_games.count, 
+          away_games_count: team.away_games.count,
+          updated_at: Time.now)
       end
 
       division.teams.each do |team|
@@ -58,6 +58,12 @@ class UpdateDivisionWorker
         home_team_score: params['home']['score'].to_i,
         away_team_score: params['away']['score'].to_i,
         commentary: params['commentary'])
+
+        if game.errors.any?
+          logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
+        else
+          logger.info("Updated game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
+        end
     else
       game = Game.create(cms_code: params['id'],
         location: params['facility']['name'],
@@ -68,12 +74,12 @@ class UpdateDivisionWorker
         home_team_score: params['home']['score'].to_i,
         away_team_score: params['away']['score'].to_i,
         commentary: params['commentary'])
-    end
 
-    if game.errors.any?
-      logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
-    else
-      logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
+        if game.errors.any?
+          logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
+        else
+          logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
+        end
     end
   end
 
