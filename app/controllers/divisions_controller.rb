@@ -2,12 +2,13 @@ class DivisionsController < ApplicationController
   def show
     if params[:id]
       @division = Division.find_by_id(params[:id])
+      @season = @division.season if @division
     else
-      @division = Division.default.first
+      @season = Season.default.first
+      @division = @season.divisions.default.first if @season
     end
 
     if @division
-      @season = @division.season
       render :show
     else
       render_404
