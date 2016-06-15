@@ -19,4 +19,6 @@ group :development, :test do
   gem 'factory_girl_rails', :require => false
   gem "rspec-rails"
   gem 'pry'
+  gem 'pry-nav'
+  gem 'shoulda-matchers', '~> 3.1'
 end
