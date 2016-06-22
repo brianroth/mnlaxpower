@@ -18,9 +18,12 @@
   <li class="active"><%= @team.name %></li>
 </ol>
 
-<div class="well well-lg">Association: <%= link_to @team.organization.name, organization_path(@team.organization) %></div>
+<div class="well well-lg"><a href='http://leag1.com/Results.asp?MyTeam=<%=@team.cms_code%>&org=youthlaxmn.org'>YLM site for <%= @team.name %></a>
+</div>
 
 <div class="well well-lg"><%=@season.name %> Record: <%=@team.wins%>-<%=@team.losses%>-<%=@team.ties%></div>
+
+<div class="well well-lg">Association: <%= link_to @team.organization.name, organization_path(@team.organization) %></div>
 
 <div class="table-responsive">
   <table id="team" class="display compact">
@@ -37,9 +40,8 @@
     <%= render partial: "game", collection: @team.games %>
     </tbody>
   </table>
-</div>
-<div class="footer" id="footer">
-  <p><a href='http://leag1.com/Results.asp?MyTeam=<%=@team.cms_code%>&org=youthlaxmn.org'>YLM site for <%= @team.name %></a></p>
-  <p><%= display_datetime(@team.updated_at) %></p>  
+  <footer>
+    <medium class="text-muted"><p><%= display_datetime(@team.updated_at) %></p></medium>
+  </footer>
 </div>
 

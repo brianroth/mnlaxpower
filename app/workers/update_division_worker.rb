@@ -12,8 +12,7 @@ class UpdateDivisionWorker
       division.teams.each do |team|
         begin
           response = get(data.merge('TeamID': team.cms_code))
-          result = response['results'] || {}
-          games = result['games'] || {}
+          games = response['Events'] || []
           games.each do |game|
             create_game(division, game)
           end
@@ -45,46 +44,57 @@ class UpdateDivisionWorker
   end
 
   def create_game(division, params)
-    home_team = division.teams.find_by_cms_code(params['home']['id'])
-    away_team = division.teams.find_by_cms_code(params['away']['id'])
+    game = Game.find_by_cms_code(params['ID'])
 
-    if game = Game.find_by_cms_code(params['id'])
-      game.update_attributes(cms_code: params['id'],
-        location: params['facility']['name'],
-        date: params['date'],
-        time: params['time'],
-        home_team: home_team,
-        away_team: away_team,
-        home_team_score: params['home']['score'].to_i,
-        away_team_score: params['away']['score'].to_i,
-        commentary: params['commentary'])
-
-        if game.errors.any?
-          logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
-        else
-          logger.info("Updated game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
-        end
+    if params['Cancelled']
+      if game
+        logger.info("Deleted game #{game.cms_code}: '#{game.away_team.name}' at '#{game.home_team.name}'")        
+        game.delete
+      end
     else
-      game = Game.create(cms_code: params['id'],
-        location: params['facility']['name'],
-        date: params['date'],
-        time: params['time'],
-        home_team: home_team,
-        away_team: away_team,
-        home_team_score: params['home']['score'].to_i,
-        away_team_score: params['away']['score'].to_i,
-        commentary: params['commentary'])
+      home_team = division.teams.find_by_cms_code(params['Home']['ID'])
+      away_team = division.teams.find_by_cms_code(params['Away']['ID'])
+      start_date = Time.zone.parse(params['StartDate']).in_time_zone("America/Chicago")
 
-        if game.errors.any?
-          logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
-        else
-          logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
-        end
+      if game
+        game.update_attributes(cms_code: params['ID'],
+          location: params['Facility']['Name'],
+          date: start_date.strftime('%m-%d-%Y'),
+          time: start_date.strftime('%I:%M %p'),
+          home_team: home_team,
+          away_team: away_team,
+          home_team_score: params['Home']['Score'].to_i,
+          away_team_score: params['Away']['Score'].to_i,
+          commentary: params['Note'])
+
+          if game.errors.any?
+            logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
+          else
+            logger.info("Updated game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
+          end
+      else
+        game = Game.create(cms_code: params['ID'],
+          location: params['Facility']['Name'],
+          date: start_date.strftime('%m-%d-%Y'),
+          time: start_date.strftime('%I:%M %p'),
+          home_team: home_team,
+          away_team: away_team,
+          home_team_score: params['Home']['Score'].to_i,
+          away_team_score: params['Away']['Score'].to_i,
+          commentary: params['Note'])
+
+          if game.errors.any?
+            logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
+          else
+            logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
+          end
+      end
+      
     end
   end
 
   def get(data)
-    response = RestClient.get 'https://api.leagueathletics.com/api/results', {:params => data}
+    response = RestClient.get 'https://api.leagueathletics.com/api/schedules', {:params => data}
     JSON.parse(response.body)
   end
 end

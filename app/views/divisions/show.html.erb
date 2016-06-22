@@ -13,20 +13,22 @@
   } );
 </script>
 <% end %>
-<div class="table-responsive">
-  <table id="division" class="display compact">
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>W</th>
-      <th>L</th>
-      <th>T</th>
-      <th>RPI</th>
-    </tr>
-    </thead>
-    <%= render partial: "team", collection: @division.teams %>
-  </table>
-</div>
-<div class="footer" id="footer">
-  <p><%= display_datetime(@division.updated_at) %></p>  
+<div class="row">
+  <div class="table-responsive">
+    <table id="division" class="display compact">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>W</th>
+        <th>L</th>
+        <th>T</th>
+        <th>RPI</th>
+      </tr>
+      </thead>
+      <%= render partial: "team", collection: @division.teams %>
+    </table>
+    <footer>
+      <medium class="text-muted"><p><%= display_datetime(@division.updated_at) %></p></medium>
+    </footer>
+  </div>
 </div>
