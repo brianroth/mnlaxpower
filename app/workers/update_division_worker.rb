@@ -59,8 +59,8 @@ class UpdateDivisionWorker
       if game
         game.update_attributes(cms_code: params['ID'],
           location: params['Facility']['Name'],
-          date: start_date.strftime('%m-%d-%Y'),
-          time: start_date.strftime('%I:%M %p'),
+          date: start_date.strftime('%m-%d-%y'),
+          time: start_date.strftime('%l:%M %p'),
           home_team: home_team,
           away_team: away_team,
           home_team_score: params['Home']['Score'].to_i,
@@ -75,8 +75,8 @@ class UpdateDivisionWorker
       else
         game = Game.create(cms_code: params['ID'],
           location: params['Facility']['Name'],
-          date: start_date.strftime('%m-%d-%Y'),
-          time: start_date.strftime('%I:%M %p'),
+          date: start_date.strftime('%m-%d-%y'),
+          time: start_date.strftime('%l:%M %p'),
           home_team: home_team,
           away_team: away_team,
           home_team_score: params['Home']['Score'].to_i,
