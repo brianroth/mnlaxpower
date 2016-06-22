@@ -7,4 +7,5 @@ class Division < ActiveRecord::Base
   scope :default, -> { where(default: true) }
   default_scope { order('name DESC') }
   has_many :teams
+  has_many :games
 end

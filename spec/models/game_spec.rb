@@ -17,8 +17,8 @@ describe Game do
         away_team: eastview,
         home_team_score: 1, 
         away_team_score: 0,
-        date: '06-25-2015',
-        time: '07:15 PM',
+        division: division,
+        start_date: Time.now,
         commentary: commentary)
     end
 
@@ -46,8 +46,8 @@ describe Game do
           away_team: eastview,
           home_team_score: 1, 
           away_team_score: 0,
-          date: '06-25-2015',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
       }
       it { should be_empty }
     end
@@ -60,8 +60,8 @@ describe Game do
             away_team: eastview,
             home_team_score: 1, 
             away_team_score: 0,
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -78,12 +78,12 @@ describe Game do
             away_team: eastview,
             home_team_score: 1, 
             away_team_score: 0,
-            time: '07:15 PM')
+            division: division)
         }
 
         it 'communicates the validation error' do
           expect(subject.count).to be 1
-          expect(subject.first).to eq [:date, "can't be blank"]
+          expect(subject.first).to eq [:start_date, "can't be blank"]
         end
       end
 
@@ -94,8 +94,8 @@ describe Game do
             away_team: eastview,
             home_team_score: 1, 
             away_team_score: 0,
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -111,8 +111,8 @@ describe Game do
             home_team: eagan,
             home_team_score: 1, 
             away_team_score: 0,
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -128,8 +128,8 @@ describe Game do
             home_team: eagan,
             away_team: eastview,
             away_team_score: 0,
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -146,8 +146,8 @@ describe Game do
             away_team: eastview,
             home_team_score: -1, 
             away_team_score: 0,
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -164,8 +164,8 @@ describe Game do
             away_team: eastview,
             home_team_score: 1.1, 
             away_team_score: 0,
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -181,8 +181,8 @@ describe Game do
             home_team: eagan,
             away_team: eastview,
             home_team_score: 1, 
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -199,8 +199,8 @@ describe Game do
             away_team: eastview,
             home_team_score: 1, 
             away_team_score: -1,
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -217,8 +217,8 @@ describe Game do
             away_team: eastview,
             home_team_score: 1, 
             away_team_score: 1.1,
-            date: '06-25-2015',
-            time: '07:15 PM')
+            division: division,
+            start_date: Time.now)
         }
 
         it 'communicates the validation error' do

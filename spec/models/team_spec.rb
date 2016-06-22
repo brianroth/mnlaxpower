@@ -36,8 +36,8 @@ describe Team do
         away_team: eastview,
         home_team_score: 1, 
         away_team_score: 0,
-        date: '06-25-2015',
-        time: '07:15 PM')
+        division: division,
+        start_date: Time.now)
       end
 
       it 'has one game' do
@@ -52,16 +52,16 @@ describe Team do
         away_team: eastview,
         home_team_score: 1, 
         away_team_score: 0,
-        date: '06-25-2015',
-        time: '07:15 PM')
+        division: division,
+        start_date: Time.now)
 
        eastview.home_games.create!(cms_code: 37218,
         location: 'Blackhawk Middle School',
         away_team: eagan,
         home_team_score: 0, 
         away_team_score: 1,
-        date: '06-25-2015',
-        time: '07:15 PM')
+        division: division,
+        start_date: Time.now)
       end
 
       it 'has one game' do
@@ -182,8 +182,8 @@ describe Team do
           away_team: eastview,
           home_team_score: 0, 
           away_team_score: 0,
-          date: '06-25-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
       end
       it 'computes correctly' do
         expect(subject).to be 0
@@ -196,8 +196,8 @@ describe Team do
           away_team: eastview,
           home_team_score: 1, 
           away_team_score: 1,
-          date: '06-25-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
       end
       context "and lost" do
         before do
@@ -223,24 +223,24 @@ describe Team do
           away_team: eastview,
           home_team_score: 1, 
           away_team_score: 0,
-          date: '06-25-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
 
         eagan.away_games.create!(cms_code: '12',
           location: 'some field',
           home_team: lakeville,
           home_team_score: 0, 
           away_team_score: 0,
-          date: '06-26-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
 
         eagan.away_games.create!(cms_code: '13',
           location: 'some field',
           home_team: rosemount,
           home_team_score: 0, 
           away_team_score: 1,
-          date: '06-27-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
 
           eastview.update_attributes(wins: 4, losses: 1, ties: 0)
           lakeville.update_attributes(wins: 5, losses: 0, ties: 0)
@@ -274,16 +274,16 @@ describe Team do
           away_team: eastview,
           home_team_score: 1, 
           away_team_score: 1,
-          date: '06-25-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
 
         eastview.away_games.create!(cms_code: '5367',
           location: 'Northview Lower Track',
           home_team: lakeville,
           home_team_score: 0, 
           away_team_score: 0,
-          date: '06-25-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
 
         eastview.update_attributes(wins: 4, losses: 1, ties: 0)
         lakeville.update_attributes(wins: 5, losses: 0, ties: 0)
@@ -300,24 +300,24 @@ describe Team do
           away_team: eastview,
           home_team_score: 1, 
           away_team_score: 1,
-          date: '06-25-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
 
         eastview.away_games.create!(cms_code: '1234',
           location: 'Northview Lower Track',
           home_team: lakeville,
           home_team_score: 0, 
           away_team_score: 1,
-          date: '06-25-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
 
         rosemount.home_games.create!(cms_code: '12346',
           location: 'Northview Lower Track',
           away_team: eastview,
           home_team_score: 0, 
           away_team_score: 1,
-          date: '06-25-2016',
-          time: '07:15 PM')
+          division: division,
+          start_date: Time.now)
 
         eastview.update_attributes(wins: 4, losses: 1, ties: 0)
         lakeville.update_attributes(wins: 5, losses: 0, ties: 0)

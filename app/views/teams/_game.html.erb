@@ -1,5 +1,5 @@
 <tr>
-  <td><%= game.date %> <%= game.time %></td>
+  <td><%= display_start_date(game) %></td>
   <td><%= game.location %></td>
   <td><%= link_to opponent(@team, game).name, team_path(opponent(@team, game)) %> </td>
   <td><%= goals_for(@team, game) %></td>

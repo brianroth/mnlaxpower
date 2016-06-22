@@ -54,15 +54,15 @@ class UpdateDivisionWorker
     else
       home_team = division.teams.find_by_cms_code(params['Home']['ID'])
       away_team = division.teams.find_by_cms_code(params['Away']['ID'])
-      start_date = Time.zone.parse(params['StartDate']).in_time_zone("America/Chicago")
+      start_date = Time.zone.parse(params['StartDate'])
 
       if game
         game.update_attributes(cms_code: params['ID'],
           location: params['Facility']['Name'],
-          date: start_date.strftime('%m-%d-%y'),
-          time: start_date.strftime('%l:%M %p'),
+          start_date: start_date,
           home_team: home_team,
           away_team: away_team,
+          division: home_team.division,
           home_team_score: params['Home']['Score'].to_i,
           away_team_score: params['Away']['Score'].to_i,
           commentary: params['Note'])
@@ -75,12 +75,12 @@ class UpdateDivisionWorker
       else
         game = Game.create(cms_code: params['ID'],
           location: params['Facility']['Name'],
-          date: start_date.strftime('%m-%d-%y'),
-          time: start_date.strftime('%l:%M %p'),
+          start_date: start_date,
           home_team: home_team,
           away_team: away_team,
           home_team_score: params['Home']['Score'].to_i,
           away_team_score: params['Away']['Score'].to_i,
+          division: home_team.division,
           commentary: params['Note'])
 
           if game.errors.any?
