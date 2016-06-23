@@ -124,12 +124,12 @@ describe Team do
 
     context 'team with no games' do
       it 'computes correctly' do
-        expect(subject).to be 0
+        expect(subject).to be 0.0
       end
     end
     context "team that hasn't played any games" do
       it 'computes correctly' do
-        expect(subject).to be 0
+        expect(subject).to be 0.0
       end
     end
     context 'team has played one game' do
@@ -172,10 +172,10 @@ describe Team do
 
     context 'team has no games' do
       it 'computes correctly' do
-        expect(subject).to be 0
+        expect(subject).to be 0.0
       end
     end
-    context "team hasn't played any games" do
+    context "team hasn't played any other games" do
       before do
         eagan.home_games.create!(cms_code: '5367',
           location: 'Northview Lower Track',
@@ -186,7 +186,7 @@ describe Team do
           start_date: Time.now)
       end
       it 'computes correctly' do
-        expect(subject).to be 0
+        expect(subject).to be 0.0
       end
     end
     context 'team has played one game' do
@@ -201,18 +201,30 @@ describe Team do
       end
       context "and lost" do
         before do
-          eastview.update_attributes(wins: 3, losses: 1, ties: 0)
+          eastview.home_games.create!(cms_code: '5368',
+            location: 'some_field',
+            away_team: lakeville,
+            home_team_score: 0, 
+            away_team_score: 1,
+            division: division,
+            start_date: Time.now)
         end
         it 'computes correctly' do
-          expect(subject).to be 0.75
+          expect(subject).to be 0.0
         end
       end
       context "and won" do
         before do
-          eastview.update_attributes(wins: 1, losses: 3, ties: 0)
+          eastview.home_games.create!(cms_code: '5368',
+              location: 'some_field',
+              away_team: lakeville,
+              home_team_score: 1, 
+              away_team_score: 0,
+              division: division,
+              start_date: Time.now)
         end
         it 'computes correctly' do
-          expect(subject).to be 0.25
+          expect(subject).to be 1.0
         end
       end
     end
@@ -230,7 +242,7 @@ describe Team do
           location: 'some field',
           home_team: lakeville,
           home_team_score: 0, 
-          away_team_score: 0,
+          away_team_score: 1,
           division: division,
           start_date: Time.now)
 
@@ -242,12 +254,24 @@ describe Team do
           division: division,
           start_date: Time.now)
 
-          eastview.update_attributes(wins: 4, losses: 1, ties: 0)
-          lakeville.update_attributes(wins: 5, losses: 0, ties: 0)
-          rosemount.update_attributes(wins: 3, losses: 2, ties: 0)
+        rosemount.away_games.create!(cms_code: '14',
+          location: 'some field',
+          home_team: lakeville,
+          home_team_score: 0, 
+          away_team_score: 1,
+          division: division,
+          start_date: Time.now)
+
+        eastview.home_games.create!(cms_code: '15',
+          location: 'some field',
+          away_team: lakeville,
+          home_team_score: 1, 
+          away_team_score: 0,
+          division: division,
+          start_date: Time.now)
       end
       it 'computes correctly' do
-        expect(subject).to be 0.7
+        expect(subject).to be 0.5
       end
     end
   end

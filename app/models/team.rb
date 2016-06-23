@@ -24,7 +24,7 @@ class Team < ActiveRecord::Base
     games_won = self.wins
 
     if games_played == 0
-      0
+      0.0
     else
       (1.0 * games_won) / games_played
     end
@@ -41,12 +41,22 @@ class Team < ActiveRecord::Base
         game.home_team
       end
 
-      games_played += (opponent.wins + opponent.losses + opponent.ties)
-      games_won += opponent.wins
+      opponent.games.each do |opponent_game|
+        opponent_opponent = if opponent_game.home_team == opponent
+          opponent_game.away_team
+        else
+          opponent_game.home_team
+        end
+
+        if opponent_opponent != self
+          games_played += 1
+          games_won += 1 if opponent_game.winner?(opponent)
+        end
+      end
     end
 
     if games_played == 0
-      0
+      0.0
     else
       (1.0 * games_won) / games_played
     end
