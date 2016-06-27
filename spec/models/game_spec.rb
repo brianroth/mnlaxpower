@@ -12,7 +12,7 @@ describe Game do
 
   describe '#save' do
     subject do
-      team = eagan.home_games.create!(cms_code: cms_code,
+      eagan.home_games.create!(cms_code: cms_code,
         location: northview,
         away_team: eastview,
         home_team_score: 1, 
