@@ -161,10 +161,10 @@ describe Team do
   end
 
   describe '#owp' do
-    let(:eagan) { division.teams.create!(name: 'UConn', cms_code: 1) }
-    let(:eastview) { division.teams.create!(name: 'Minnesota', cms_code: 2) }
-    let(:lakeville) { division.teams.create!(name: 'Duke', cms_code: 3) }
-    let(:rosemount) { division.teams.create!(name: 'Kansas', cms_code: 4) }
+    let(:eagan) { division.teams.create!(name: 'eagan', cms_code: 1) }
+    let(:eastview) { division.teams.create!(name: 'eastview', cms_code: 2) }
+    let(:lakeville) { division.teams.create!(name: 'lakeville', cms_code: 3) }
+    let(:rosemount) { division.teams.create!(name: 'rosemount', cms_code: 4) }
 
     subject do
       eagan.owp
@@ -214,7 +214,7 @@ describe Team do
         create_game(eastview, 5, rosemount, 6)
       end
       it 'computes correctly' do
-        expect(eagan.owp).to be_within(0.1).of(0.75)
+        expect(subject).to be_within(0.1).of(0.75)
         expect(rosemount.owp).to be_within(0.1).of(0.66)
         expect(lakeville.owp).to be_within(0.1).of(0.33)
         expect(eastview.owp).to be_within(0.1).of(0.3889)
