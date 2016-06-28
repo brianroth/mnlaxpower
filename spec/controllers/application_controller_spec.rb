@@ -16,6 +16,5 @@ describe ApplicationController do
     end
 
     it { is_expected.to respond_with :internal_server_error }
-
   end
 end

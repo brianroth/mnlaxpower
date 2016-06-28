@@ -18,6 +18,14 @@ class Game < ActiveRecord::Base
 
   def winner?(team)
     ((home_team == team) && (home_team_score > away_team_score)) ||
-    ((away_team == team) && (away_team_score > home_team_score))
+      ((away_team == team) && (away_team_score > home_team_score))
+  end
+
+  def opponent(team)
+    if home_team == team
+      away_team
+    else
+      home_team
+    end
   end
 end

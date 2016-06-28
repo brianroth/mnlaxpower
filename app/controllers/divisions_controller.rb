@@ -6,7 +6,7 @@ class DivisionsController < ApplicationController
       render_404
     end
   end
-  
+
   def show
     if @division = Division.find_by_id(params[:id])
       @season = @division.season

@@ -4,7 +4,7 @@ class UpdateDivisionWorker
   include Sidekiq::Worker
 
   def perform(division_id)
-    data = { 
+    data = {
       org: 'youthlaxmn.org',
     }
 
@@ -24,12 +24,12 @@ class UpdateDivisionWorker
         losses = Game.where("(home_team_id = ? and home_team_score < away_team_score) or (away_team_id = ? and away_team_score < home_team_score)", team.id, team.id).count
         ties = Game.where("(home_team_id = ? or away_team_id = ?) and home_team_score = away_team_score and home_team_score != 0", team.id, team.id).count
 
-        team.update_attributes(wins: wins, 
-          ties: ties,
-          losses: losses,
-          home_games_count: team.home_games.count, 
-          away_games_count: team.away_games.count,
-          updated_at: Time.now)
+        team.update_attributes(wins: wins,
+                               ties: ties,
+                               losses: losses,
+                               home_games_count: team.home_games.count,
+                               away_games_count: team.away_games.count,
+                               updated_at: Time.now)
       end
 
       division.teams.each do |team|
@@ -48,7 +48,7 @@ class UpdateDivisionWorker
 
     if params['Cancelled']
       if game
-        logger.info("Deleted game #{game.cms_code}: '#{game.away_team.name}' at '#{game.home_team.name}'")        
+        logger.info("Deleted game #{game.cms_code}: '#{game.away_team.name}' at '#{game.home_team.name}'")
         game.delete
       end
     else
@@ -58,38 +58,38 @@ class UpdateDivisionWorker
 
       if game
         game.update_attributes(cms_code: params['ID'],
-          location: params['Facility']['Name'],
-          start_date: start_date,
-          home_team: home_team,
-          away_team: away_team,
-          division: home_team.division,
-          home_team_score: params['Home']['Score'].to_i,
-          away_team_score: params['Away']['Score'].to_i,
-          commentary: params['Note'])
+                               location: params['Facility']['Name'],
+                               start_date: start_date,
+                               home_team: home_team,
+                               away_team: away_team,
+                               division: home_team.division,
+                               home_team_score: params['Home']['Score'].to_i,
+                               away_team_score: params['Away']['Score'].to_i,
+                               commentary: params['Note'])
 
-          if game.errors.any?
-            logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
-          else
-            logger.info("Updated game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
-          end
+        if game.errors.any?
+          logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
+        else
+          logger.info("Updated game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
+        end
       else
         game = Game.create(cms_code: params['ID'],
-          location: params['Facility']['Name'],
-          start_date: start_date,
-          home_team: home_team,
-          away_team: away_team,
-          home_team_score: params['Home']['Score'].to_i,
-          away_team_score: params['Away']['Score'].to_i,
-          division: home_team.division,
-          commentary: params['Note'])
+                           location: params['Facility']['Name'],
+                           start_date: start_date,
+                           home_team: home_team,
+                           away_team: away_team,
+                           home_team_score: params['Home']['Score'].to_i,
+                           away_team_score: params['Away']['Score'].to_i,
+                           division: home_team.division,
+                           commentary: params['Note'])
 
-          if game.errors.any?
-            logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
-          else
-            logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
-          end
+        if game.errors.any?
+          logger.error "Unable to save game with params #{params}: #{game.errors.messages}"
+        else
+          logger.info("Created game #{game.cms_code}: '#{away_team.name}' at '#{home_team.name}'")
+        end
       end
-      
+
     end
   end
 

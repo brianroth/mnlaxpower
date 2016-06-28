@@ -13,13 +13,13 @@ describe Game do
   describe '#save' do
     subject do
       eagan.home_games.create!(cms_code: cms_code,
-        location: northview,
-        away_team: eastview,
-        home_team_score: 1, 
-        away_team_score: 0,
-        division: division,
-        start_date: Time.now,
-        commentary: commentary)
+                               location: northview,
+                               away_team: eastview,
+                               home_team_score: 1,
+                               away_team_score: 0,
+                               division: division,
+                               start_date: Time.now,
+                               commentary: commentary)
     end
 
     it { is_expected.to have_attributes cms_code: cms_code }
@@ -39,29 +39,29 @@ describe Game do
     end
 
     context 'when validation passes' do
-      let(:game) { 
+      let(:game) {
         Game.create!(cms_code: cms_code,
-          location: northview,
-          home_team: eagan,
-          away_team: eastview,
-          home_team_score: 1, 
-          away_team_score: 0,
-          division: division,
-          start_date: Time.now)
+                     location: northview,
+                     home_team: eagan,
+                     away_team: eastview,
+                     home_team_score: 1,
+                     away_team_score: 0,
+                     division: division,
+                     start_date: Time.now)
       }
       it { should be_empty }
     end
 
     context 'when validation fails' do
       context 'because location is missing' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            home_team: eagan, 
-            away_team: eastview,
-            home_team_score: 1, 
-            away_team_score: 0,
-            division: division,
-            start_date: Time.now)
+                      home_team: eagan,
+                      away_team: eastview,
+                      home_team_score: 1,
+                      away_team_score: 0,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -71,14 +71,14 @@ describe Game do
       end
 
       context 'because the date is missing' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            home_team: eagan, 
-            away_team: eastview,
-            home_team_score: 1, 
-            away_team_score: 0,
-            division: division)
+                      location: northview,
+                      home_team: eagan,
+                      away_team: eastview,
+                      home_team_score: 1,
+                      away_team_score: 0,
+                      division: division)
         }
 
         it 'communicates the validation error' do
@@ -88,14 +88,14 @@ describe Game do
       end
 
       context 'because the home team is missing' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            away_team: eastview,
-            home_team_score: 1, 
-            away_team_score: 0,
-            division: division,
-            start_date: Time.now)
+                      location: northview,
+                      away_team: eastview,
+                      home_team_score: 1,
+                      away_team_score: 0,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -105,14 +105,14 @@ describe Game do
       end
 
       context 'because the away team is missing' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            home_team: eagan,
-            home_team_score: 1, 
-            away_team_score: 0,
-            division: division,
-            start_date: Time.now)
+                      location: northview,
+                      home_team: eagan,
+                      home_team_score: 1,
+                      away_team_score: 0,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -122,14 +122,14 @@ describe Game do
       end
 
       context 'because the home team score is missing' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            home_team: eagan,
-            away_team: eastview,
-            away_team_score: 0,
-            division: division,
-            start_date: Time.now)
+                      location: northview,
+                      home_team: eagan,
+                      away_team: eastview,
+                      away_team_score: 0,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -139,15 +139,15 @@ describe Game do
       end
 
       context 'because the home team score is less than zero' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            home_team: eagan,
-            away_team: eastview,
-            home_team_score: -1, 
-            away_team_score: 0,
-            division: division,
-            start_date: Time.now)
+                      location: northview,
+                      home_team: eagan,
+                      away_team: eastview,
+                      home_team_score: -1,
+                      away_team_score: 0,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -157,15 +157,15 @@ describe Game do
       end
 
       context 'because the home team score is not a whole number' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            home_team: eagan,
-            away_team: eastview,
-            home_team_score: 1.1, 
-            away_team_score: 0,
-            division: division,
-            start_date: Time.now)
+                      location: northview,
+                      home_team: eagan,
+                      away_team: eastview,
+                      home_team_score: 1.1,
+                      away_team_score: 0,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -175,14 +175,14 @@ describe Game do
       end
 
       context 'because the away team score is missing' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            home_team: eagan,
-            away_team: eastview,
-            home_team_score: 1, 
-            division: division,
-            start_date: Time.now)
+                      location: northview,
+                      home_team: eagan,
+                      away_team: eastview,
+                      home_team_score: 1,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -192,15 +192,15 @@ describe Game do
       end
 
       context 'because the away team score is less than zero' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            home_team: eagan,
-            away_team: eastview,
-            home_team_score: 1, 
-            away_team_score: -1,
-            division: division,
-            start_date: Time.now)
+                      location: northview,
+                      home_team: eagan,
+                      away_team: eastview,
+                      home_team_score: 1,
+                      away_team_score: -1,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do
@@ -210,15 +210,15 @@ describe Game do
       end
 
       context 'because the away team score is not a whole number' do
-        let(:game) { 
+        let(:game) {
           Game.create(cms_code: cms_code,
-            location: northview,
-            home_team: eagan,
-            away_team: eastview,
-            home_team_score: 1, 
-            away_team_score: 1.1,
-            division: division,
-            start_date: Time.now)
+                      location: northview,
+                      home_team: eagan,
+                      away_team: eastview,
+                      home_team_score: 1,
+                      away_team_score: 1.1,
+                      division: division,
+                      start_date: Time.now)
         }
 
         it 'communicates the validation error' do

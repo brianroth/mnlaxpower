@@ -1,7 +1,7 @@
 class UpdateFeedWorker
   include Sidekiq::Worker
   def perform(season_id)
-    data = { 
+    data = {
       org: 'youthlaxmn.org',
       season: season_id
     }

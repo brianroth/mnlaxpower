@@ -4,7 +4,7 @@ class UpdateScheduleWorker
   include Sidekiq::Worker
 
   def perform(season_id)
-    data = { 
+    data = {
       org: 'youthlaxmn.org',
     }
 
@@ -39,26 +39,26 @@ class UpdateScheduleWorker
       gametime = DateTime.parse(params['StartDate']).in_time_zone("Central Time (US & Canada)")
 
       game.update_attributes(cms_code: params['ID'],
-        location: params['Facility']['Name'],
-        date: gametime.strftime("%m-%d-%y"),
-        time: gametime.strftime("%l:%M %p"),
-        home_team: home_team,
-        away_team: away_team,
-        away_team_score: 0,
-        home_team_score: 0,
-        commentary: params['commentary'])
+                             location: params['Facility']['Name'],
+                             date: gametime.strftime("%m-%d-%y"),
+                             time: gametime.strftime("%l:%M %p"),
+                             home_team: home_team,
+                             away_team: away_team,
+                             away_team_score: 0,
+                             home_team_score: 0,
+                             commentary: params['commentary'])
     else
       gametime = DateTime.parse(params['StartDate']).in_time_zone("Central Time (US & Canada)")
 
       game = Game.create(cms_code: params['ID'],
-        location: params['Facility']['Name'],
-        date: gametime.strftime("%m-%d-%y"),
-        time: gametime.strftime("%l:%M %p"),
-        home_team: home_team,
-        away_team: away_team,
-        away_team_score: 0,
-        home_team_score: 0,
-        commentary: params['commentary'])
+                         location: params['Facility']['Name'],
+                         date: gametime.strftime("%m-%d-%y"),
+                         time: gametime.strftime("%l:%M %p"),
+                         home_team: home_team,
+                         away_team: away_team,
+                         away_team_score: 0,
+                         home_team_score: 0,
+                         commentary: params['commentary'])
     end
 
     if game.errors.any?

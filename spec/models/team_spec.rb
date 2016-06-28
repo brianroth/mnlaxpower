@@ -31,13 +31,13 @@ describe Team do
 
     context 'with one home and no away games' do
       before do
-       eagan.home_games.create!(cms_code: 38237,
-        location: 'Northview',
-        away_team: eastview,
-        home_team_score: 1, 
-        away_team_score: 0,
-        division: division,
-        start_date: Time.now)
+        eagan.home_games.create!(cms_code: 38237,
+                                 location: 'Northview',
+                                 away_team: eastview,
+                                 home_team_score: 1,
+                                 away_team_score: 0,
+                                 division: division,
+                                 start_date: Time.now)
       end
 
       it 'has one game' do
@@ -47,21 +47,21 @@ describe Team do
 
     context 'with one home and one away games' do
       before do
-       eagan.home_games.create!(cms_code: 838,
-        location: 'Northview',
-        away_team: eastview,
-        home_team_score: 1, 
-        away_team_score: 0,
-        division: division,
-        start_date: Time.now)
+        eagan.home_games.create!(cms_code: 838,
+                                 location: 'Northview',
+                                 away_team: eastview,
+                                 home_team_score: 1,
+                                 away_team_score: 0,
+                                 division: division,
+                                 start_date: Time.now)
 
-       eastview.home_games.create!(cms_code: 37218,
-        location: 'Blackhawk Middle School',
-        away_team: eagan,
-        home_team_score: 0, 
-        away_team_score: 1,
-        division: division,
-        start_date: Time.now)
+        eastview.home_games.create!(cms_code: 37218,
+                                    location: 'Blackhawk Middle School',
+                                    away_team: eagan,
+                                    home_team_score: 0,
+                                    away_team_score: 1,
+                                    division: division,
+                                    start_date: Time.now)
       end
 
       it 'has one game' do
@@ -161,10 +161,10 @@ describe Team do
   end
 
   describe '#owp' do
-    let(:eagan) { division.teams.create!(name: 'Eagan', cms_code: 1) }
-    let(:eastview) { division.teams.create!(name: 'Eastview', cms_code: 2) }
-    let(:lakeville) { division.teams.create!(name: 'Lakeville', cms_code: 3) }
-    let(:rosemount) { division.teams.create!(name: 'Rosemount', cms_code: 4) }
+    let(:eagan) { division.teams.create!(name: 'UConn', cms_code: 1) }
+    let(:eastview) { division.teams.create!(name: 'Minnesota', cms_code: 2) }
+    let(:lakeville) { division.teams.create!(name: 'Duke', cms_code: 3) }
+    let(:rosemount) { division.teams.create!(name: 'Kansas', cms_code: 4) }
 
     subject do
       eagan.owp
@@ -177,13 +177,7 @@ describe Team do
     end
     context "team hasn't played any other games" do
       before do
-        eagan.home_games.create!(cms_code: '5367',
-          location: 'Northview Lower Track',
-          away_team: eastview,
-          home_team_score: 0, 
-          away_team_score: 0,
-          division: division,
-          start_date: Time.now)
+        create_game(eagan, 0, eastview, 0)
       end
       it 'computes correctly' do
         expect(subject).to be 0.0
@@ -191,23 +185,11 @@ describe Team do
     end
     context 'team has played one game' do
       before do
-        eagan.home_games.create!(cms_code: '5367',
-          location: 'Northview Lower Track',
-          away_team: eastview,
-          home_team_score: 1, 
-          away_team_score: 1,
-          division: division,
-          start_date: Time.now)
+        create_game(eagan, 1, eastview, 1)
       end
       context "and lost" do
         before do
-          eastview.home_games.create!(cms_code: '5368',
-            location: 'some_field',
-            away_team: lakeville,
-            home_team_score: 0, 
-            away_team_score: 1,
-            division: division,
-            start_date: Time.now)
+          create_game(eastview, 0, lakeville, 1)
         end
         it 'computes correctly' do
           expect(subject).to be 0.0
@@ -215,13 +197,7 @@ describe Team do
       end
       context "and won" do
         before do
-          eastview.home_games.create!(cms_code: '5368',
-              location: 'some_field',
-              away_team: lakeville,
-              home_team_score: 1, 
-              away_team_score: 0,
-              division: division,
-              start_date: Time.now)
+          create_game(eastview, 1, lakeville, 0)
         end
         it 'computes correctly' do
           expect(subject).to be 1.0
@@ -230,52 +206,21 @@ describe Team do
     end
     context 'team has played many games' do
       before do
-        eagan.home_games.create!(cms_code: '11',
-          location: 'some field',
-          away_team: eastview,
-          home_team_score: 1, 
-          away_team_score: 0,
-          division: division,
-          start_date: Time.now)
-
-        eagan.away_games.create!(cms_code: '12',
-          location: 'some field',
-          home_team: lakeville,
-          home_team_score: 0, 
-          away_team_score: 1,
-          division: division,
-          start_date: Time.now)
-
-        eagan.away_games.create!(cms_code: '13',
-          location: 'some field',
-          home_team: rosemount,
-          home_team_score: 0, 
-          away_team_score: 1,
-          division: division,
-          start_date: Time.now)
-
-        rosemount.away_games.create!(cms_code: '14',
-          location: 'some field',
-          home_team: lakeville,
-          home_team_score: 0, 
-          away_team_score: 1,
-          division: division,
-          start_date: Time.now)
-
-        eastview.home_games.create!(cms_code: '15',
-          location: 'some field',
-          away_team: lakeville,
-          home_team_score: 1, 
-          away_team_score: 0,
-          division: division,
-          start_date: Time.now)
+        create_game(eagan, 6, rosemount, 5)
+        create_game(eagan, 8, lakeville, 6)
+        create_game(eastview, 1, eagan, 7)
+        create_game(rosemount, 9, eagan, 6)
+        create_game(lakeville, 8, eastview, 7)
+        create_game(eastview, 5, rosemount, 6)
       end
       it 'computes correctly' do
-        expect(subject).to be 0.5
+        expect(eagan.owp).to be_within(0.1).of(0.75)
+        expect(rosemount.owp).to be_within(0.1).of(0.66)
+        expect(lakeville.owp).to be_within(0.1).of(0.33)
+        expect(eastview.owp).to be_within(0.1).of(0.3889)
       end
     end
   end
-
   describe '#oowp' do
     let(:eagan) { division.teams.create!(name: 'Eagan', cms_code: 1) }
     let(:eastview) { division.teams.create!(name: 'Eastview', cms_code: 2) }
@@ -293,25 +238,8 @@ describe Team do
     end
     context "team's opponent hasn't played any games" do
       before do
-        eagan.home_games.create!(cms_code: '5367',
-          location: 'Northview Lower Track',
-          away_team: eastview,
-          home_team_score: 1, 
-          away_team_score: 1,
-          division: division,
-          start_date: Time.now)
-
-        eastview.away_games.create!(cms_code: '5367',
-          location: 'Northview Lower Track',
-          home_team: lakeville,
-          home_team_score: 0, 
-          away_team_score: 0,
-          division: division,
-          start_date: Time.now)
-
-        eastview.update_attributes(wins: 4, losses: 1, ties: 0)
-        lakeville.update_attributes(wins: 5, losses: 0, ties: 0)
-        rosemount.update_attributes(wins: 3, losses: 2, ties: 0)
+        create_game(eagan, 1, eastview, 1)
+        create_game(lakeville, 0, eastview, 0)
       end
       it 'computes correctly' do
         expect(subject).to be 0
@@ -319,29 +247,9 @@ describe Team do
     end
     context "team's opponent has played some games" do
       before do
-        eagan.home_games.create!(cms_code: '123',
-          location: 'Northview Lower Track',
-          away_team: eastview,
-          home_team_score: 1, 
-          away_team_score: 1,
-          division: division,
-          start_date: Time.now)
-
-        eastview.away_games.create!(cms_code: '1234',
-          location: 'Northview Lower Track',
-          home_team: lakeville,
-          home_team_score: 0, 
-          away_team_score: 1,
-          division: division,
-          start_date: Time.now)
-
-        rosemount.home_games.create!(cms_code: '12346',
-          location: 'Northview Lower Track',
-          away_team: eastview,
-          home_team_score: 0, 
-          away_team_score: 1,
-          division: division,
-          start_date: Time.now)
+        create_game(eagan, 1, eastview, 1)
+        create_game(lakeville, 0, eastview, 1)
+        create_game(rosemount, 0, eastview, 1)
 
         eastview.update_attributes(wins: 4, losses: 1, ties: 0)
         lakeville.update_attributes(wins: 5, losses: 0, ties: 0)
@@ -351,5 +259,16 @@ describe Team do
         expect(subject).to be 0.8
       end
     end
+  end
+
+  def create_game(home, home_score, away, away_score)
+    @cms_code = (@cms_code || 0) + 1
+    home.home_games.create!(cms_code: @cms_code,
+                            location: 'loction',
+                            away_team: away,
+                            home_team_score: home_score,
+                            away_team_score: away_score,
+                            division: home.division,
+                            start_date: Time.now)
   end
 end
