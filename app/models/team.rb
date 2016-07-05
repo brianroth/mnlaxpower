@@ -1,11 +1,11 @@
-class Team < ActiveRecord::Base
+class Team < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :division}
   validates :cms_code, presence: true, uniqueness: true
 
   belongs_to :organization
   belongs_to :division
-  has_many :home_games, class_name: 'Game', foreign_key: :home_team_id, counter_cache: true
-  has_many :away_games, class_name: 'Game', foreign_key: :away_team_id, counter_cache: true
+  has_many :home_games, class_name: 'Game', foreign_key: :home_team_id
+  has_many :away_games, class_name: 'Game', foreign_key: :away_team_id
 
   def games
     Game.where("home_team_id = ? OR away_team_id = ?", id, id).order(date: :desc)

@@ -10,7 +10,7 @@ describe DivisionsController do
 
     describe 'when the division is found' do
       before do
-        get :show, {id: u15b.id}
+        get :show, params: {id: u15b.id}
       end
 
       it { is_expected.to respond_with :success }
@@ -24,7 +24,7 @@ describe DivisionsController do
 
     describe 'when the division is not found' do
       before do
-        get :show, {id: 'foo'}
+        get :show, params: {id: 'foo'}
       end
 
       it { is_expected.to respond_with :not_found }

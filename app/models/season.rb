@@ -1,4 +1,4 @@
-class Season < ActiveRecord::Base
+class Season < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :cms_code, presence: true, uniqueness: true
 

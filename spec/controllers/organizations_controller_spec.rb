@@ -29,7 +29,7 @@ describe OrganizationsController do
 
     describe 'when the organization is found' do
       before do
-        get :show, {id: lakeville.id}
+        get :show, params: {id: lakeville.id}
       end
 
       it { is_expected.to respond_with :success }
@@ -44,7 +44,7 @@ describe OrganizationsController do
 
     describe 'when the organization is not found' do
       before do
-        get :show, {id: 'foo'}
+        get :show, params: {id: 'foo'}
       end
 
       it { is_expected.to respond_with :not_found }

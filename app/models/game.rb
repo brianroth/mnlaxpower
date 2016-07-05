@@ -1,4 +1,4 @@
-class Game < ActiveRecord::Base
+class Game < ApplicationRecord
   validates :cms_code, presence: true
   validates :location, presence: true
   validates :start_date, presence: true

@@ -12,7 +12,7 @@ describe ApplicationController do
 
   describe 'system error handling' do
     before do
-      get :index, {}
+      get :index, params: {}
     end
 
     it { is_expected.to respond_with :internal_server_error }

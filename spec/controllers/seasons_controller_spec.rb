@@ -9,7 +9,7 @@ describe SeasonsController do
   describe 'GET /seasons/:id (show)' do
     describe 'when the season is found' do
       before do
-        get :show, {id: season.id}
+        get :show, params: {id: season.id}
       end
 
       it { is_expected.to redirect_to division_url(division) }
@@ -17,7 +17,7 @@ describe SeasonsController do
 
     describe 'when the season is not found' do
       before do
-        get :show, {id: 'foo'}
+        get :show, params: {id: 'foo'}
       end
 
       it { is_expected.to respond_with :not_found }

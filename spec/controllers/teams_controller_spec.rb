@@ -10,7 +10,7 @@ describe TeamsController do
   describe 'GET /teams/:id (show)' do
     describe 'when the team is found' do
       before do
-        get :show, {id: team.id}
+        get :show, params: {id: team.id}
       end
 
       it { is_expected.to respond_with :success }
@@ -25,7 +25,7 @@ describe TeamsController do
 
     describe 'when the team is not found' do
       before do
-        get :show, {id: 'foo'}
+        get :show, params: {id: 'foo'}
       end
 
       it { is_expected.to respond_with :not_found }
